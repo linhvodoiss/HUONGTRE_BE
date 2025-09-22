@@ -1,4 +1,5 @@
 package com.fpt.entity;
+
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
@@ -9,41 +10,40 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Doc")
+@Table(name = "BranchProduct")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE `Doc` SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE `BranchProduct` SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
-public class Doc {
+public class BranchProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "branch_id", nullable = false)
+    private Branch branch;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @Column(nullable = false)
-    private String title;
+    private Double price;
 
-    @Column(nullable = false, unique = true)
-    private String slug;
+    @Column(nullable = false)
+    private Boolean isAvailable = true;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String content;
-    @Column(name = "`order`")
-    private Integer order;
-
-    private Boolean isActive = true;
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;

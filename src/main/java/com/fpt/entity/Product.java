@@ -10,23 +10,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "Version")
+@Table(name = "Product")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE `Version` SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE `Product` SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
-public class Version {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String version;
+    private String name;
 
     private String description;
+    private String imageUrl;
 
     private Boolean isActive = true;
     @Column(name = "is_deleted", nullable = false)
@@ -39,7 +40,10 @@ public class Version {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "version", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Category> categories;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BranchProduct> branchProducts;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 }

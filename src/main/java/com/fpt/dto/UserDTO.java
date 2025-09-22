@@ -20,17 +20,11 @@ import java.time.LocalDateTime;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO extends RepresentationModel<UserDTO> {
-
 	private Long id;
-	
 	private String userName;
-	
 	private String email;
-
 	private String password;
-
 	private String firstName;
-
 	private String lastName;
 	private String avatarUrl;
 	private String phoneNumber;

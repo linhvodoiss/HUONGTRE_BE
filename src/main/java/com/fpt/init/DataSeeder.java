@@ -16,9 +16,6 @@ public class DataSeeder implements CommandLineRunner {
     private final SubscriptionPackageRepository subscriptionPackageRepository;
     private final PaymentOrderRepository paymentOrderRepository;
     private final LicenseRepository licenseRepository;
-    private final VersionRepository versionRepository;
-    private final CategoryRepository categoryRepository;
-    private final DocRepository docRepository;
     private final OptionRepository optionRepository;
 
     @Override
@@ -138,32 +135,6 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
 
             licenseRepository.save(license);
-        }
-
-        if (versionRepository.count() == 0) {
-            List<Version> versions = Arrays.asList(
-                    Version.builder().version("v1.0").description("Phiên bản đầu tiên của hệ thống").isActive(true).isDeleted(false).build(),
-                    Version.builder().version("v1.1").description("Bổ sung thêm chức năng tìm kiếm").isActive(true).isDeleted(false).build()
-            );
-            versionRepository.saveAll(versions);
-        }
-
-        if (categoryRepository.count() == 0) {
-            List<Category> categories = Arrays.asList(
-                    Category.builder().version(versionRepository.findById(1L).orElse(null)).name("Hướng dẫn sử dụng").slug("huong-dan-su-dung").order(1L).isActive(true).isDeleted(false).build(),
-                    Category.builder().version(versionRepository.findById(1L).orElse(null)).name("FAQ").slug("cau-hoi-thuong-gap").order(2L).isActive(true).isDeleted(false).build(),
-                    Category.builder().version(versionRepository.findById(2L).orElse(null)).name("Changelog").slug("thay-doi-phien-ban").order(1L).isActive(true).isDeleted(false).build()
-            );
-            categoryRepository.saveAll(categories);
-        }
-
-        if (docRepository.count() == 0) {
-            List<Doc> docs = Arrays.asList(
-                    Doc.builder().category(categoryRepository.findById(1L).orElse(null)).title("Cách đăng ký tài khoản").slug("dang-ky-tai-khoan").content("Bạn cần điền email và mật khẩu...").order(1).isActive(true).isDeleted(false).build(),
-                    Doc.builder().category(categoryRepository.findById(2L).orElse(null)).title("Tôi quên mật khẩu, làm sao lấy lại?").slug("quen-mat-khau").content("Bạn có thể nhấn vào 'Quên mật khẩu'.").order(1).isActive(true).isDeleted(false).build(),
-                    Doc.builder().category(categoryRepository.findById(3L).orElse(null)).title("v1.1 - Thêm chức năng tìm kiếm").slug("v1-1-search-update").content("Chúng tôi đã thêm chức năng tìm kiếm...").order(1).isActive(true).isDeleted(false).build()
-            );
-            docRepository.saveAll(docs);
         }
     }
 

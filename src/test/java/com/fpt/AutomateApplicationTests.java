@@ -1,12 +1,8 @@
 package com.fpt;
 
 import com.fpt.dto.CategoryDTO;
-import com.fpt.dto.VersionDTO;
 import com.fpt.entity.*;
-import com.fpt.repository.CategoryRepository;
 import com.fpt.repository.UserRepository;
-import com.fpt.repository.VersionRepository;
-import com.fpt.service.CategoryService;
 import com.fpt.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

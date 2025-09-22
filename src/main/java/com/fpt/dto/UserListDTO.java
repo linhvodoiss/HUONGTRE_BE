@@ -12,15 +12,10 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class UserListDTO extends RepresentationModel<UserListDTO> {
-
 	private Long id;
-	
 	private String userName;
-	
 	private String email;
-
 	private String firstName;
-
 	private String lastName;
 	private String avatarUrl;
 	private String phoneNumber;
