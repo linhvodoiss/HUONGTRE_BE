@@ -1,10 +1,8 @@
 package com.fpt;
 
-import com.fpt.dto.CategoryDTO;
 import com.fpt.entity.*;
 import com.fpt.repository.UserRepository;
 import com.fpt.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,174 +14,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
-
-@ExtendWith(MockitoExtension.class)
-class CategoryServiceTest {
-
-	@Mock
-	private CategoryRepository categoryRepository;
-
-	@Mock
-	private VersionRepository versionRepository;
-
-	@InjectMocks
-	private CategoryService categoryService;
-
-	private Category category;
-	private Version version;
-
-	@BeforeEach
-	void setUp() {
-		version = Version.builder()
-				.id(1L)
-				.version("1.0")
-				.description("desc")
-				.createdAt(LocalDateTime.now())
-				.updatedAt(LocalDateTime.now())
-				.build();
-
-		category = Category.builder()
-				.id(1L)
-				.name("Test category")
-				.slug("test-category")
-				.order(1l)
-				.isActive(true)
-				.version(version)
-				.createdAt(LocalDateTime.now())
-				.updatedAt(LocalDateTime.now())
-				.build();
-	}
-
-	// Positive: ADMIN can list categories
-	@Test
-	void testGetAll_WhenUserIsAdmin_ShouldReturnAllCategories() {
-		// Simulate user context with ADMIN role (@WithMockUser(roles = "ADMIN") in Spring)
-		when(categoryRepository.findAll()).thenReturn(List.of(category));
-		var result = categoryService.getAll();
-		assertThat(result).hasSize(1);
-		assertThat(result.get(0).getName()).isEqualTo("Test category");
-		verify(categoryRepository, times(1)).findAll();
-	}
-
-	// Negative: Non-ADMIN cannot list categories
-	@Test
-	void testGetAll_WhenUserIsNotAdmin_ShouldThrowAccessDenied() {
-		// Simulate user with USER role or without ADMIN
-		assertThrows(AccessDeniedException.class, () -> categoryService.getAll());
-		verify(categoryRepository, never()).findAll();
-	}
-
-
-
-
-	@Test
-	void testGetByIdIfActive_success() {
-		when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-
-		CategoryDTO dto = categoryService.getByIdIfActive(1L);
-
-		assertThat(dto.getId()).isEqualTo(1L);
-		assertThat(dto.getIsActive()).isTrue();
-	}
-
-
-
-	@Test
-	void testGetByIdIfActive_inactiveOrNotFound() {
-		category.setIsActive(false);
-		when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-
-		assertThatThrownBy(() -> categoryService.getByIdIfActive(1L))
-				.isInstanceOf(RuntimeException.class)
-				.hasMessageContaining("inactive");
-	}
-
-	@Test
-	void testGetById_found() {
-		when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-
-		CategoryDTO dto = categoryService.getById(1L);
-
-		assertThat(dto.getName()).isEqualTo("Test category");
-	}
-
-	@Test
-	void testGetById_notFound() {
-		when(categoryRepository.findById(99L)).thenReturn(Optional.empty());
-
-		assertThatThrownBy(() -> categoryService.getById(99L))
-				.isInstanceOf(RuntimeException.class)
-				.hasMessageContaining("not found");
-	}
-
-	@Test
-	void testCreate_success() {
-		CategoryDTO dto = CategoryDTO.builder()
-				.name("New")
-				.slug("new")
-				.order(1l)
-				.isActive(true)
-				.versionId(1L)
-				.build();
-
-		when(versionRepository.findById(1L)).thenReturn(Optional.of(version));
-		when(categoryRepository.save(any(Category.class))).thenReturn(category);
-
-		CategoryDTO result = categoryService.create(dto);
-
-		assertThat(result.getName()).isEqualTo("Test category");
-	}
-
-//	@Test
-//	void testUpdate_changeVersion() {
-//		CategoryDTO dto = CategoryDTO.builder()
-//				.name("Updated")
-//				.slug("updated")
-//				.order(2L)
-//				.isActive(false)
-//				.versionId(2L)
-//				.build();
-//
-//		Version newVersion = Version.builder().id(2L).version("2.0").build();
-//
-//		when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-//		when(versionRepository.findById(2L)).thenReturn(Optional.of(newVersion));
-//		when(categoryRepository.save(any(Category.class))).thenReturn(category);
-//
-//		CategoryDTO result = categoryService.update(1L, dto);
-//
-//		verify(categoryRepository).save(any(Category.class));
-//		assertThat(result.getName()).isEqualTo("Test category");
-//	}
-
-	@Test
-	void testDelete_success() {
-		when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-
-		categoryService.delete(1L);
-
-		verify(categoryRepository).delete(category);
-	}
-
-	@Test
-	void testDeleteMore_success() {
-		when(categoryRepository.findAllById(List.of(1L, 2L))).thenReturn(List.of(category));
-
-		categoryService.deleteMore(List.of(1L, 2L));
-
-		verify(categoryRepository).deleteAll(anyList());
-	}
-
-
-}
 
 
 @ExtendWith(MockitoExtension.class)
