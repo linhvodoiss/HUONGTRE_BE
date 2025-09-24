@@ -3,13 +3,8 @@ package com.fpt.service;
 import java.util.List;
 
 import com.fpt.dto.CategoryDTO;
-import com.fpt.dto.DocDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import com.fpt.form.CategoryFormForCreating;
-import com.fpt.form.CategoryFormForUpdating;
-import com.fpt.entity.Category;
 
 public interface ICategoryService {
 
