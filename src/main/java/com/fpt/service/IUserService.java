@@ -54,4 +54,8 @@ public interface IUserService extends UserDetailsService {
 	UserDTO UpdateUserInformation(Long userId, ChangePublicProfileDTO dto);
 	List<UserListDTO> convertToDto(List<User> data);
 	Long countCustomerAccounts();
+    User findUserByPhoneNumber(String phoneNumber);
+
+    boolean validateOtp(String phoneNumber, String otpCode);
+    void generateOtp(String phoneNumber);
 }

@@ -68,6 +68,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(
 						new JWTAuthenticationFilter("/api/v1/login", authenticationManager(), service, failureHandler),
 						UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(
+                        new JWTOtpAuthenticationFilter("/api/v1/login-otp", authenticationManager(), service, failureHandler),
+                        UsernamePasswordAuthenticationFilter.class
+                )
 				.addFilterBefore(
 						new JWTAuthorizationFilter(),
 						UsernamePasswordAuthenticationFilter.class);

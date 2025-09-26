@@ -31,5 +31,10 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 	public User findByEmail(String email);
 
 	public Long countByRole(Role role);
+    User findUserByPhoneNumber(String phoneNumber);
+
+
+    Optional<User> findByPhoneNumber(String phoneNumber);
+
 
 }

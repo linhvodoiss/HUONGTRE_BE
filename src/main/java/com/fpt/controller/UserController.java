@@ -199,4 +199,10 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 
-	}}
+	}
+    @PostMapping("/send-otp")
+    public ResponseEntity<String> sendOtp(@RequestParam String phoneNumber) {
+        userService.generateOtp(phoneNumber);
+        return ResponseEntity.ok("OTP đã được gửi!");
+    }
+}

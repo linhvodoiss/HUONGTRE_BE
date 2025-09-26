@@ -2,9 +2,7 @@ package com.fpt.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.fpt.dto.UserDTO;
 import com.fpt.dto.UserListDTO;
@@ -12,6 +10,7 @@ import com.fpt.entity.*;
 import com.fpt.exception.AccountBannedException;
 import com.fpt.exception.AccountNotActivatedException;
 import com.fpt.form.ChangePasswordForm;
+import com.fpt.repository.OtpRequestRepository;
 import com.fpt.specification.UserSpecificationBuilder;
 import com.fpt.websocket.PaymentSocketService;
 import com.fpt.websocket.UserSocketService;
@@ -42,6 +41,8 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private UserRepository userRepository;
+    @Autowired
+    private OtpRequestRepository otpRequestRepository;
 	@Autowired
 	private FileService fileService;
 
@@ -377,6 +378,53 @@ public class UserService implements IUserService {
 
 		return newAvatarUrl;
 	}
+
+    @Override
+    public User findUserByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UsernameNotFoundException("Phone number not found"));
+    }
+
+    @Override
+    public boolean validateOtp(String phoneNumber, String otpCode) {
+        Optional<OtpRequest> otpOpt = otpRequestRepository
+                .findTopByPhoneNumberAndOtpCodeAndIsUsedFalseOrderByCreatedAtDesc(phoneNumber, otpCode);
+
+        if (otpOpt.isEmpty()) {
+            return false;
+        }
+
+        OtpRequest otp = otpOpt.get();
+        if (otp.getExpiredAt().isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+        // Nếu ok thì mark used
+        otp.setIsUsed(true);
+        otpRequestRepository.save(otp);
+
+        return true;
+    }
+
+    @Override
+    public void generateOtp(String phoneNumber) {
+        String otpCode = String.valueOf(new Random().nextInt(999999));
+        while (otpCode.length() < 6) {
+            otpCode = "0" + otpCode;
+        }
+
+        // Tạo bản ghi OTP
+        OtpRequest otpRequest = new OtpRequest();
+        otpRequest.setPhoneNumber(phoneNumber);
+        otpRequest.setOtpCode(otpCode);
+        otpRequest.setExpiredAt(LocalDateTime.now().plusMinutes(5));
+        otpRequest.setIsUsed(false);
+
+        otpRequestRepository.save(otpRequest);
+
+        // TODO: Gửi SMS bằng service SMS
+        System.out.println("OTP cho " + phoneNumber + " là: " + otpCode);
+    }
 
 	@Override
 	public Long countCustomerAccounts() {
