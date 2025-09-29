@@ -53,13 +53,10 @@ public class JWTOtpAuthenticationFilter extends AbstractAuthenticationProcessing
                 return null;
             }
 
-            // Nếu hợp lệ => tạo Authentication object
-            return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            otpRequest.getPhoneNumber(),
-                            null,
-                            Collections.emptyList()
-                    )
+            return new UsernamePasswordAuthenticationToken(
+                    otpRequest.getPhoneNumber(),
+                    null,
+                    Collections.emptyList()
             );
 
         } catch (IOException e) {
