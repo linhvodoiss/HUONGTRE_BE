@@ -1,10 +1,9 @@
-package com.fpt.service;
+package com.fpt.service.implementations;
 
-import com.fpt.dto.LicenseDTO;
 import com.fpt.dto.OptionDTO;
 import com.fpt.entity.Option;
 import com.fpt.repository.OptionRepository;
-import com.fpt.specification.LicenseSpecificationBuilder;
+import com.fpt.service.interfaces.IOptionService;
 import com.fpt.specification.OptionSpecificationBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

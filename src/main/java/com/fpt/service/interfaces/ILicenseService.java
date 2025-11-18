@@ -1,10 +1,7 @@
-package com.fpt.service;
+package com.fpt.service.interfaces;
 
 import com.fpt.dto.LicenseDTO;
-import com.fpt.dto.PaymentOrderDTO;
-import com.fpt.dto.UserLicenseViewDTO;
 import com.fpt.entity.License;
-import com.fpt.entity.PaymentOrder;
 import com.fpt.entity.SubscriptionPackage;
 import com.fpt.form.LicenseCreateForm;
 import com.fpt.form.LicenseVerifyRequestForm;

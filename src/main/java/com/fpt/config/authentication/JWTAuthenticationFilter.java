@@ -2,8 +2,6 @@ package com.fpt.config.authentication;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -11,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fpt.authentication.CustomAuthenticationFailureHandler;
 import com.fpt.dto.UserDTO;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,8 +19,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.fpt.entity.User;
-import com.fpt.service.IUserService;
-import com.fpt.service.JWTTokenService;
+import com.fpt.service.interfaces.IUserService;
+import com.fpt.service.implementations.JWTTokenService;
 
 public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 	

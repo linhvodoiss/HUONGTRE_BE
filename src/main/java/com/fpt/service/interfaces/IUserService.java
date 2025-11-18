@@ -1,7 +1,6 @@
-package com.fpt.service;
+package com.fpt.service.interfaces;
 import com.fpt.dto.UserDTO;
 import com.fpt.dto.UserListDTO;
-import com.fpt.entity.UserStatus;
 import com.fpt.form.ChangePasswordForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

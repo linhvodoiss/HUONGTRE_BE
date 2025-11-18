@@ -1,4 +1,4 @@
-package com.fpt.service;
+package com.fpt.service.interfaces;
 
 import com.fpt.dto.SubscriptionPackageDTO;
 import com.fpt.entity.SubscriptionPackage;

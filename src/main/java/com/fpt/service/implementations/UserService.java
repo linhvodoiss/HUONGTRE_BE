@@ -1,4 +1,4 @@
-package com.fpt.service;
+package com.fpt.service.implementations;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -11,15 +11,14 @@ import com.fpt.exception.AccountBannedException;
 import com.fpt.exception.AccountNotActivatedException;
 import com.fpt.form.ChangePasswordForm;
 import com.fpt.repository.OtpRequestRepository;
+import com.fpt.service.interfaces.IUserService;
 import com.fpt.specification.UserSpecificationBuilder;
-import com.fpt.websocket.PaymentSocketService;
 import com.fpt.websocket.UserSocketService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,4 +1,5 @@
 package com.fpt.entity;
+
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
@@ -10,53 +11,38 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "Product")
+@Table(name = "Size")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE `Product` SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE `Size` SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
-public class Product {
+public class Size {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String name; // S, M, L
 
     private String description;
-    private String imageUrl;
 
+    @Column(nullable = false)
     private Boolean isActive = true;
+
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BranchProduct> branchProducts;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
-    @ManyToMany
-    @JoinTable(
-            name = "ProductTopping",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "topping_id")
-    )
-    private List<Topping> toppings;
-    @ManyToMany
-    @JoinTable(
-            name = "ProductSize",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "size_id")
-    )
-    private List<Size> sizes;
+    @ManyToMany(mappedBy = "sizes")
+    private List<Product> products;
 }

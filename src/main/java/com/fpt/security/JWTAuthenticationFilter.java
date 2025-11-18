@@ -1,6 +1,6 @@
 package com.fpt.security;
 
-import com.fpt.service.JWTTokenService;
+import com.fpt.service.implementations.JWTTokenService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;

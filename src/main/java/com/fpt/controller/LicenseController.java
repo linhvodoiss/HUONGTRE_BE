@@ -2,16 +2,12 @@ package com.fpt.controller;
 
 import com.fpt.annotation.CurrentUserId;
 import com.fpt.dto.LicenseDTO;
-import com.fpt.dto.PaymentOrderDTO;
-import com.fpt.dto.UserLicenseViewDTO;
-import com.fpt.entity.License;
-import com.fpt.entity.PaymentOrder;
 import com.fpt.entity.SubscriptionPackage;
 import com.fpt.form.LicenseCreateForm;
 import com.fpt.form.LicenseVerifyRequestForm;
 import com.fpt.payload.*;
 import com.fpt.repository.LicenseRepository;
-import com.fpt.service.ILicenseService;
+import com.fpt.service.interfaces.ILicenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,10 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/licenses")

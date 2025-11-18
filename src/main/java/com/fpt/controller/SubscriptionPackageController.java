@@ -1,18 +1,13 @@
 package com.fpt.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpt.dto.SubscriptionPackageDTO;
-import com.fpt.dto.UserListDTO;
 import com.fpt.entity.SubscriptionPackage;
-import com.fpt.entity.User;
 import com.fpt.payload.PaginatedResponse;
 import com.fpt.payload.SuccessNoResponse;
 import com.fpt.payload.SuccessResponse;
-import com.fpt.service.ISubscriptionPackageService;
+import com.fpt.service.interfaces.ISubscriptionPackageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,9 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/subscriptions")

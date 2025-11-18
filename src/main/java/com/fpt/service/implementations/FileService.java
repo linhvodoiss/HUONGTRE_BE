@@ -1,11 +1,10 @@
-package com.fpt.service;
+package com.fpt.service.implementations;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.core.io.ClassPathResource;
+import com.fpt.service.interfaces.IFileService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

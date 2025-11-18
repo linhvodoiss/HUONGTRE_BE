@@ -1,30 +1,25 @@
-package com.fpt.service;
+package com.fpt.service.implementations;
 
 import com.fpt.dto.OptionDTO;
 import com.fpt.dto.SubscriptionPackageDTO;
-import com.fpt.dto.UserListDTO;
 import com.fpt.entity.Option;
 import com.fpt.entity.PaymentOrder;
 import com.fpt.entity.SubscriptionPackage;
-import com.fpt.entity.User;
 import com.fpt.repository.OptionRepository;
 import com.fpt.repository.PaymentOrderRepository;
 import com.fpt.repository.SubscriptionPackageRepository;
+import com.fpt.service.interfaces.ISubscriptionPackageService;
 import com.fpt.specification.SubscriptionPackageSpecificationBuilder;
-import com.fpt.specification.UserSpecificationBuilder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service

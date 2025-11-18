@@ -5,7 +5,6 @@ import javax.validation.Valid;
 
 import com.fpt.annotation.CurrentUserId;
 import com.fpt.dto.*;
-import com.fpt.entity.PaymentOrder;
 import com.fpt.form.ChangePasswordForm;
 import com.fpt.payload.SuccessNoResponse;
 import com.fpt.payload.SuccessResponse;
@@ -16,12 +15,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fpt.entity.User;
-import com.fpt.service.IUserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fpt.service.interfaces.IUserService;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin("*")

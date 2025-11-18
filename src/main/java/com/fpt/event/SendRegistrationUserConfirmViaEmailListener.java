@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.fpt.service.IEmailService;
+import com.fpt.service.interfaces.IEmailService;
 
 @Component
 public class SendRegistrationUserConfirmViaEmailListener

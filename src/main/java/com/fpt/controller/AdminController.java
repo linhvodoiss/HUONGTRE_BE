@@ -8,7 +8,7 @@ import com.fpt.form.ChangePasswordForm;
 import com.fpt.payload.PaginatedResponse;
 import com.fpt.payload.SuccessNoResponse;
 import com.fpt.payload.SuccessResponse;
-import com.fpt.service.IPaymentOrderService;
+import com.fpt.service.interfaces.IPaymentOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.fpt.entity.User;
-import com.fpt.service.IUserService;
+import com.fpt.service.interfaces.IUserService;
 
 import java.util.HashMap;
 import java.util.List;

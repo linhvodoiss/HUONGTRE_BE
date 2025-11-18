@@ -8,26 +8,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductDTO {
+public class ToppingDTO {
     private Long id;
     private String name;
     private String description;
     private String imageUrl;
+
+    private Double price;
+    private Boolean isAvailable;
     private Boolean isActive;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Category
-    private Long categoryId;
-    private String categoryName;
-
-    // BranchProducts
-    private List<BranchProductDTO> branchProducts;
-
-    // Toppings
-    private List<Long> toppingIds;
-
-    // Sizes
-    private List<Long> sizeIds;
+    private List<Long> productIds;
 }

@@ -1,4 +1,4 @@
-package com.fpt.service;
+package com.fpt.service.interfaces;
 
 public interface IEmailService {
 

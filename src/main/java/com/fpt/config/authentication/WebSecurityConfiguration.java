@@ -2,7 +2,7 @@ package com.fpt.config.authentication;
 
 import com.fpt.authentication.CustomAuthenticationEntryPoint;
 import com.fpt.config.CustomAuthenticationFailureHandler;
-import com.fpt.service.IUserService;
+import com.fpt.service.interfaces.IUserService;
 import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

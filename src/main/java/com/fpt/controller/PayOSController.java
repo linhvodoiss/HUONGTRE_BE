@@ -1,17 +1,12 @@
 package com.fpt.controller;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fpt.dto.PayOSDTO;
 import com.fpt.form.PayOSForm;
 import com.fpt.payload.SuccessNoResponse;
 import com.fpt.payload.SuccessResponse;
-import com.fpt.service.IPaymentOrderService;
-import com.fpt.service.PayOSService;
+import com.fpt.service.interfaces.IPaymentOrderService;
+import com.fpt.service.implementations.PayOSService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

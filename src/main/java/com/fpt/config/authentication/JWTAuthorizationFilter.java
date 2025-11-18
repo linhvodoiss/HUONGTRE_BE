@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
-import com.fpt.service.JWTTokenService;
+import com.fpt.service.implementations.JWTTokenService;
 
 public class JWTAuthorizationFilter extends GenericFilterBean {
 	
