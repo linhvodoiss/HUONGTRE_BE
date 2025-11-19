@@ -22,6 +22,7 @@ public class DataSeeder implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final ToppingRepository toppingRepository;
     private final SizeRepository sizeRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -163,30 +164,56 @@ public class DataSeeder implements CommandLineRunner {
             toppingRepository.saveAll(List.of(topping1, topping2, topping3));
         }
 
-        // --- Product ---
+        // --- Category ---
+        if (categoryRepository.count() == 0) {
+            Category category1 = Category.builder()
+                    .name("Trà")
+                    .description("Các loại trà thơm ngon")
+                    .imageUrl("https://example.com/category-tea.png")
+                    .isDeleted(false)
+                    .build();
+
+            Category category2 = Category.builder()
+                    .name("Nước uống khác")
+                    .description("Các loại nước uống khác")
+                    .imageUrl("https://example.com/category-other.png")
+                    .isDeleted(false)
+                    .build();
+
+            categoryRepository.saveAll(List.of(category1, category2));
+        }
+
+// --- Product ---
         if (productRepository.count() == 0) {
+            List<Category> categories = categoryRepository.findAll();
+            Category teaCategory = categories.stream().filter(c -> c.getName().equals("Trà")).findFirst().orElse(null);
+            Category otherCategory = categories.stream().filter(c -> c.getName().equals("Nước uống khác")).findFirst().orElse(null);
+
             Product product1 = Product.builder()
-                    .name("Product A")
-                    .description("Sản phẩm A mô tả chi tiết")
+                    .name("Trà đào")
+                    .description("Trà đào mô tả chi tiết")
                     .imageUrl("https://example.com/product-a.png")
+                    .category(teaCategory)
                     .isActive(true)
                     .isDeleted(false)
-                    .branchProducts(new ArrayList<>()) // tránh null
+                    .branchProducts(new ArrayList<>())
                     .build();
 
             Product product2 = Product.builder()
-                    .name("Product B")
-                    .description("Sản phẩm B mô tả chi tiết")
+                    .name("Trà sữa olong")
+                    .description("Trà sữa olong mô tả chi tiết")
                     .imageUrl("https://example.com/product-b.png")
+                    .category(teaCategory)
                     .isActive(true)
                     .isDeleted(false)
                     .branchProducts(new ArrayList<>())
                     .build();
 
             Product product3 = Product.builder()
-                    .name("Product C")
-                    .description("Sản phẩm C mô tả chi tiết")
+                    .name("Nước lọc")
+                    .description("Nước lọc mô tả chi tiết")
                     .imageUrl("https://example.com/product-c.png")
+                    .category(otherCategory)
                     .isActive(true)
                     .isDeleted(false)
                     .branchProducts(new ArrayList<>())
@@ -194,7 +221,7 @@ public class DataSeeder implements CommandLineRunner {
 
             productRepository.saveAll(List.of(product1, product2, product3));
 
-            // --- Gán size và topping ---
+            // Gán size và topping như trước
             List<Size> sizes = sizeRepository.findAll();
             List<Topping> toppings = toppingRepository.findAll();
 
@@ -209,6 +236,7 @@ public class DataSeeder implements CommandLineRunner {
 
             productRepository.saveAll(List.of(product1, product2, product3));
         }
+
 
         // --- Branch ---
         if (branchRepository.count() == 0) {
