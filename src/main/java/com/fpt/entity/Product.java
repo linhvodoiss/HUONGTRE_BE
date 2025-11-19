@@ -1,4 +1,5 @@
 package com.fpt.entity;
+
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,33 +32,34 @@ public class Product {
     private String imageUrl;
 
     private Boolean isActive = true;
+
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // Khởi tạo List để tránh lỗi cascade
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BranchProduct> branchProducts;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private List<BranchProduct> branchProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductSize> productSizes = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(
             name = "ProductTopping",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "topping_id")
     )
-    private List<Topping> toppings;
-    @ManyToMany
-    @JoinTable(
-            name = "ProductSize",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "size_id")
-    )
-    private List<Size> sizes;
+    private List<Topping> toppings = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

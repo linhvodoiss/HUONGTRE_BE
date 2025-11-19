@@ -153,7 +153,7 @@ private ModelMapper modelMapper;
             return null;
         }
 
-        // Category object
+        // Category
         CategoryDTO categoryDto = null;
         if (entity.getCategory() != null) {
             categoryDto = CategoryDTO.builder()
@@ -164,7 +164,7 @@ private ModelMapper modelMapper;
                     .build();
         }
 
-        // Toppings list
+        // Toppings
         List<ToppingDTO> toppingDTOs = null;
         if (entity.getToppings() != null) {
             toppingDTOs = entity.getToppings().stream()
@@ -176,13 +176,14 @@ private ModelMapper modelMapper;
                     .toList();
         }
 
-        // Sizes list
-        List<SizeDTO> sizeDTOs = null;
-        if (entity.getSizes() != null) {
-            sizeDTOs = entity.getSizes().stream()
-                    .map(s -> SizeDTO.builder()
-                            .id(s.getId())
-                            .name(s.getName())
+        // Sizes through ProductSize
+        List<ProductSizeDTO> sizeDTOs = null;
+        if (entity.getProductSizes() != null) {
+            sizeDTOs = entity.getProductSizes().stream()
+                    .map(ps -> ProductSizeDTO.builder()
+                            .sizeId(ps.getSize().getId())
+                            .sizeName(ps.getSize().getName())
+                            .price(ps.getPrice())
                             .build())
                     .toList();
         }
@@ -200,5 +201,6 @@ private ModelMapper modelMapper;
                 .updatedAt(entity.getUpdatedAt())
                 .build();
     }
+
 
 }

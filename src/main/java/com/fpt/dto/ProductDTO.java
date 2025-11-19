@@ -27,6 +27,6 @@ public class ProductDTO {
 
     private CategoryDTO category;
     private List<ToppingDTO> toppings;
-    private List<SizeDTO> sizes;
+    private List<ProductSizeDTO> sizes;
 
 }

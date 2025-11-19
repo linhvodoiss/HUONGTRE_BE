@@ -7,6 +7,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -42,6 +43,7 @@ public class Branch {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BranchProduct> branchProducts;
+    private List<BranchProduct> branchProducts = new ArrayList<>();
+
 
 }

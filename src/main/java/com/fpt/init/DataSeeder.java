@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Component
@@ -20,14 +21,27 @@ public class DataSeeder implements CommandLineRunner {
     private final BranchRepository branchRepository;
     private final BranchProductRepository branchProductRepository;
     private final ProductRepository productRepository;
-    private final ToppingRepository toppingRepository;
     private final SizeRepository sizeRepository;
+    private final ToppingRepository toppingRepository;
     private final CategoryRepository categoryRepository;
-
+    private final ProductSizeRepository productSizeRepository;
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
+        seedOptions();
+        seedUsers();
+        seedSubscriptionPackages();
+        seedPaymentOrders();
+        seedLicenses();
+        seedSizes();
+        seedToppings();
+        seedCategories();
+        seedProducts();
+        seedBranches();
+        seedBranchProducts();
+    }
 
-        // --- Option ---
+    private void seedOptions() {
         if (optionRepository.count() == 0) {
             List<Option> options = Arrays.asList(
                     Option.builder().name("5 documents per month").isActive(true).isDeleted(false).build(),
@@ -36,8 +50,9 @@ public class DataSeeder implements CommandLineRunner {
             );
             optionRepository.saveAll(options);
         }
+    }
 
-        // --- User ---
+    private void seedUsers() {
         if (userRepository.count() == 0) {
             List<User> users = Arrays.asList(
                     User.builder().userName("admin").email("admin@gmail.com")
@@ -45,11 +60,13 @@ public class DataSeeder implements CommandLineRunner {
                             .firstName("Nguyen Van").lastName("A").phoneNumber("0987654321")
                             .role(Role.ADMIN).status(UserStatus.ACTIVE).isActive(true)
                             .avatarUrl("").isDeleted(false).build(),
+
                     User.builder().userName("CaoVanBay").email("Bay@gmail.com")
                             .password("$2a$10$RAU5Vl1A6Iheyeg2MSBlVeLRLpH2kRSpredJkzJIm72ZscI6pg/62")
                             .firstName("Cao Van").lastName("Bay").phoneNumber("0999999999")
                             .role(Role.CUSTOMER).status(UserStatus.ACTIVE).isActive(true)
                             .avatarUrl("").isDeleted(false).build(),
+
                     User.builder().userName("LeThiTam").email("Tam@gmail.com")
                             .password("$2a$10$RAU5Vl1A6Iheyeg2MSBlVeLRLpH2kRSpredJkzJIm72ZscI6pg/62")
                             .firstName("Le Thi").lastName("Tam").phoneNumber("0912345678")
@@ -58,37 +75,39 @@ public class DataSeeder implements CommandLineRunner {
             );
             userRepository.saveAll(users);
         }
+    }
 
-        // --- SubscriptionPackage ---
+    private void seedSubscriptionPackages() {
         if (subscriptionPackageRepository.count() == 0) {
             Option option1 = optionRepository.findById(1L).orElseThrow();
             Option option2 = optionRepository.findById(2L).orElseThrow();
             Option option3 = optionRepository.findById(3L).orElseThrow();
 
             List<SubscriptionPackage> packagesToSave = new ArrayList<>();
-
             for (SubscriptionPackage.BillingCycle cycle : SubscriptionPackage.BillingCycle.values()) {
                 SubscriptionPackage runtimePackage = SubscriptionPackage.builder()
                         .name("Runtime Package")
-                        .description("hihi")
+                        .description("Runtime package description")
                         .price(getFixedPrice(cycle))
                         .discount(0f)
                         .billingCycle(cycle)
                         .typePackage(SubscriptionPackage.TypePackage.RUNTIME)
                         .isActive(true)
                         .isDeleted(false)
+                        .options(new ArrayList<>()) // mutable list
                         .build();
                 packagesToSave.add(runtimePackage);
 
                 SubscriptionPackage devPackage = SubscriptionPackage.builder()
                         .name("Dev Package")
-                        .description("hihi")
+                        .description("Dev package description")
                         .price(getFixedPrice(cycle))
                         .discount(10f)
                         .billingCycle(cycle)
                         .typePackage(SubscriptionPackage.TypePackage.DEV)
                         .isActive(true)
                         .isDeleted(false)
+                        .options(new ArrayList<>())
                         .build();
                 packagesToSave.add(devPackage);
             }
@@ -97,16 +116,16 @@ public class DataSeeder implements CommandLineRunner {
 
             for (SubscriptionPackage pkg : packagesToSave) {
                 if (pkg.getTypePackage() == SubscriptionPackage.TypePackage.RUNTIME) {
-                    pkg.setOptions(List.of(option1));
+                    pkg.getOptions().add(option1);
                 } else {
-                    pkg.setOptions(List.of(option2, option3));
+                    pkg.getOptions().addAll(Arrays.asList(option2, option3));
                 }
             }
-
             subscriptionPackageRepository.saveAll(packagesToSave);
         }
+    }
 
-        // --- PaymentOrder ---
+    private void seedPaymentOrders() {
         if (paymentOrderRepository.count() == 0) {
             PaymentOrder order1 = PaymentOrder.builder()
                     .user(userRepository.findById(1L).orElse(null))
@@ -120,15 +139,16 @@ public class DataSeeder implements CommandLineRunner {
                     .bin("970415")
                     .accountName("NGUYEN THI HUONG")
                     .accountNumber("0386331971")
-                    .cancelReason("00020101021138540010A00000072701240006970415011003863319710208QRIBFTTA53037045802VN63046733")
+                    .cancelReason("000201......733")
                     .dateTransfer("2025-07-30 11:09:43")
                     .isDeleted(false)
                     .build();
 
-            paymentOrderRepository.saveAll(List.of(order1));
+            paymentOrderRepository.save(order1);
         }
+    }
 
-        // --- License ---
+    private void seedLicenses() {
         if (licenseRepository.count() == 0) {
             PaymentOrder paymentOrder = paymentOrderRepository.findByOrderId(123456).orElse(null);
 
@@ -147,56 +167,56 @@ public class DataSeeder implements CommandLineRunner {
 
             licenseRepository.save(license);
         }
+    }
 
-        // --- Size ---
+    private void seedSizes() {
         if (sizeRepository.count() == 0) {
-            Size sizeS = Size.builder().name("S").description("Small").isActive(true).isDeleted(false).build();
-            Size sizeM = Size.builder().name("M").description("Medium").isActive(true).isDeleted(false).build();
-            Size sizeL = Size.builder().name("L").description("Large").isActive(true).isDeleted(false).build();
-            sizeRepository.saveAll(List.of(sizeS, sizeM, sizeL));
+            List<Size> sizes = Arrays.asList(
+                    Size.builder().name("S").description("Small").isActive(true).isDeleted(false).build(),
+                    Size.builder().name("M").description("Medium").isActive(true).isDeleted(false).build(),
+                    Size.builder().name("L").description("Large").isActive(true).isDeleted(false).build()
+            );
+            sizeRepository.saveAll(sizes);
         }
+    }
 
-        // --- Topping ---
+    private void seedToppings() {
         if (toppingRepository.count() == 0) {
-            Topping topping1 = Topping.builder().name("Cheese").description("Extra cheese").price(500.0).isActive(true).isDeleted(false).isAvailable(true).build();
-            Topping topping2 = Topping.builder().name("Bacon").description("Crispy bacon").price(700.0).isActive(true).isDeleted(false).isAvailable(true).build();
-            Topping topping3 = Topping.builder().name("Mushroom").description("Fresh mushroom").price(400.0).isActive(true).isDeleted(false).isAvailable(true).build();
-            toppingRepository.saveAll(List.of(topping1, topping2, topping3));
+            List<Topping> toppings = Arrays.asList(
+                    Topping.builder().name("Cheese").description("Extra cheese").price(500.0).isActive(true).isDeleted(false).isAvailable(true).build(),
+                    Topping.builder().name("Bacon").description("Crispy bacon").price(700.0).isActive(true).isDeleted(false).isAvailable(true).build(),
+                    Topping.builder().name("Mushroom").description("Fresh mushroom").price(400.0).isActive(true).isDeleted(false).isAvailable(true).build()
+            );
+            toppingRepository.saveAll(toppings);
         }
+    }
 
-        // --- Category ---
+    private void seedCategories() {
         if (categoryRepository.count() == 0) {
-            Category category1 = Category.builder()
-                    .name("Trà")
-                    .description("Các loại trà thơm ngon")
-                    .imageUrl("https://example.com/category-tea.png")
-                    .isDeleted(false)
-                    .build();
-
-            Category category2 = Category.builder()
-                    .name("Nước uống khác")
-                    .description("Các loại nước uống khác")
-                    .imageUrl("https://example.com/category-other.png")
-                    .isDeleted(false)
-                    .build();
-
-            categoryRepository.saveAll(List.of(category1, category2));
+            List<Category> categories = Arrays.asList(
+                    Category.builder().name("Trà").description("Các loại trà thơm ngon").imageUrl("https://example.com/category-tea.png").isDeleted(false).build(),
+                    Category.builder().name("Nước uống khác").description("Các loại nước uống khác").imageUrl("https://example.com/category-other.png").isDeleted(false).build()
+            );
+            categoryRepository.saveAll(categories);
         }
+    }
 
-// --- Product ---
+    private void seedProducts() {
         if (productRepository.count() == 0) {
-            List<Category> categories = categoryRepository.findAll();
-            Category teaCategory = categories.stream().filter(c -> c.getName().equals("Trà")).findFirst().orElse(null);
-            Category otherCategory = categories.stream().filter(c -> c.getName().equals("Nước uống khác")).findFirst().orElse(null);
+            Category teaCategory = categoryRepository.findAll().stream().filter(c -> c.getName().equals("Trà")).findFirst().orElse(null);
+            Category otherCategory = categoryRepository.findAll().stream().filter(c -> c.getName().equals("Nước uống khác")).findFirst().orElse(null);
+
+            List<Product> products = new ArrayList<>();
 
             Product product1 = Product.builder()
                     .name("Trà đào")
                     .description("Trà đào mô tả chi tiết")
                     .imageUrl("https://example.com/product-a.png")
                     .category(teaCategory)
-                    .isActive(true)
-                    .isDeleted(false)
+                    .productSizes(new ArrayList<>())
+                    .toppings(new ArrayList<>())
                     .branchProducts(new ArrayList<>())
+                    .isActive(true).isDeleted(false)
                     .build();
 
             Product product2 = Product.builder()
@@ -204,9 +224,10 @@ public class DataSeeder implements CommandLineRunner {
                     .description("Trà sữa olong mô tả chi tiết")
                     .imageUrl("https://example.com/product-b.png")
                     .category(teaCategory)
-                    .isActive(true)
-                    .isDeleted(false)
+                    .productSizes(new ArrayList<>())
+                    .toppings(new ArrayList<>())
                     .branchProducts(new ArrayList<>())
+                    .isActive(true).isDeleted(false)
                     .build();
 
             Product product3 = Product.builder()
@@ -214,83 +235,84 @@ public class DataSeeder implements CommandLineRunner {
                     .description("Nước lọc mô tả chi tiết")
                     .imageUrl("https://example.com/product-c.png")
                     .category(otherCategory)
-                    .isActive(true)
-                    .isDeleted(false)
+                    .productSizes(new ArrayList<>())
+                    .toppings(new ArrayList<>())
                     .branchProducts(new ArrayList<>())
+                    .isActive(true).isDeleted(false)
                     .build();
 
-            productRepository.saveAll(List.of(product1, product2, product3));
+            products.addAll(Arrays.asList(product1, product2, product3));
+            productRepository.saveAll(products);
 
-            // Gán size và topping như trước
-            List<Size> sizes = sizeRepository.findAll();
+            // --- gán toppings ---
             List<Topping> toppings = toppingRepository.findAll();
+            if (!toppings.isEmpty()) {
+                product1.setToppings(new ArrayList<>(toppings.subList(0,2))); // Cheese + Bacon
+                product2.setToppings(new ArrayList<>(toppings.subList(1,3))); // Bacon + Mushroom
+                product3.setToppings(new ArrayList<>(Arrays.asList(toppings.get(0), toppings.get(2)))); // Cheese + Mushroom
+            }
+            productRepository.saveAll(products);
 
-            product1.setSizes(sizes);
-            product1.setToppings(toppings.subList(0, 2));
-
-            product2.setSizes(sizes.subList(1, 3));
-            product2.setToppings(toppings.subList(1, 3));
-
-            product3.setSizes(List.of(sizes.get(0), sizes.get(2)));
-            product3.setToppings(List.of(toppings.get(0), toppings.get(2)));
-
-            productRepository.saveAll(List.of(product1, product2, product3));
+            // --- tạo ProductSize ---
+            List<Size> sizes = sizeRepository.findAll();
+            for (Product product : products) {
+                createProductSize(product, sizes);
+            }
         }
+    }
 
-
-        // --- Branch ---
+    private void seedBranches() {
         if (branchRepository.count() == 0) {
-            Branch branch1 = Branch.builder()
-                    .name("Branch A")
-                    .description("Chi nhánh chính tại Hà Nội")
-                    .address("123 Phố Huế, Hà Nội")
-                    .phone("02412345678")
-                    .imageUrl("https://example.com/branch-a.png")
-                    .isActive(true)
-                    .isDeleted(false)
-                    .branchProducts(new ArrayList<>()) // tránh null
-                    .build();
-
-            Branch branch2 = Branch.builder()
-                    .name("Branch B")
-                    .description("Chi nhánh phụ tại Hồ Chí Minh")
-                    .address("456 Lê Lợi, TP.HCM")
-                    .phone("02812345678")
-                    .imageUrl("https://example.com/branch-b.png")
-                    .isActive(true)
-                    .isDeleted(false)
-                    .branchProducts(new ArrayList<>())
-                    .build();
-
-            branchRepository.saveAll(List.of(branch1, branch2));
+            List<Branch> branches = Arrays.asList(
+                    Branch.builder().name("Branch A").description("Chi nhánh chính tại Hà Nội").address("123 Phố Huế, Hà Nội").phone("02412345678").imageUrl("https://example.com/branch-a.png").isActive(true).isDeleted(false).branchProducts(new ArrayList<>()).build(),
+                    Branch.builder().name("Branch B").description("Chi nhánh phụ tại Hồ Chí Minh").address("456 Lê Lợi, TP.HCM").phone("02812345678").imageUrl("https://example.com/branch-b.png").isActive(true).isDeleted(false).branchProducts(new ArrayList<>()).build()
+            );
+            branchRepository.saveAll(branches);
         }
+    }
 
-        // --- BranchProduct ---
+    private void seedBranchProducts() {
         if (branchProductRepository.count() == 0) {
             List<Branch> branches = branchRepository.findAll();
             List<Product> products = productRepository.findAll();
 
-            if (!branches.isEmpty() && !products.isEmpty()) {
-                for (Branch branch : branches) {
-                    for (int i = 0; i < Math.min(2, products.size()); i++) {
-                        Product product = products.get(i);
+            for (Branch branch : branches) {
+                for (int i = 0; i < Math.min(2, products.size()); i++) {
+                    Product product = products.get(i);
+                    BranchProduct bp = BranchProduct.builder()
+                            .branch(branch)
+                            .product(product)
+                            .price(1000.0 + i * 500)
+                            .isAvailable(true)
+                            .isDeleted(false)
+                            .build();
 
-                        BranchProduct bp = BranchProduct.builder()
-                                .branch(branch)
-                                .product(product)
-                                .price(1000.0 + i * 500)
-                                .isAvailable(true)
-                                .isDeleted(false)
-                                .build();
-
-                        // chỉ save, không thao tác collection lazy
-                        branchProductRepository.save(bp);
-                    }
+                    branch.getBranchProducts().add(bp);
+                    product.getBranchProducts().add(bp);
                 }
             }
+            productRepository.saveAll(products);
+            branchRepository.saveAll(branches);
         }
+    }
 
-
+    private void createProductSize(Product product, List<Size> sizes) {
+        for (Size size : sizes) {
+            double basePrice = 20000;
+            double extra = switch (size.getName()) {
+                case "M" -> 5000;
+                case "L" -> 10000;
+                default -> 0;
+            };
+            ProductSize ps = ProductSize.builder()
+                    .product(product)
+                    .size(size)
+                    .price(basePrice + extra)
+                    .isDeleted(false)
+                    .build();
+            product.getProductSizes().add(ps);
+        }
+        productRepository.save(product);
     }
 
     private float getFixedPrice(SubscriptionPackage.BillingCycle cycle) {

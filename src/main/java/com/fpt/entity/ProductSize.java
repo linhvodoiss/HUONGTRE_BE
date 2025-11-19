@@ -8,39 +8,41 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "Size")
+@Table(name = "ProductSize")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE `Size` SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE `ProductSize` SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
-public class Size {
+public class ProductSize {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String name; // S, M, L
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "size_id", nullable = false)
+    private Size size;
 
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private Double price;
+
+    private Double discountPrice;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
 }
