@@ -25,9 +25,8 @@ public class ProductDTO {
     // BranchProducts
     private List<BranchProductDTO> branchProducts;
 
-    // Toppings
-    private List<Long> toppingIds;
+    private CategoryDTO category;
+    private List<ToppingDTO> toppings;
+    private List<SizeDTO> sizes;
 
-    // Sizes
-    private List<Long> sizeIds;
 }

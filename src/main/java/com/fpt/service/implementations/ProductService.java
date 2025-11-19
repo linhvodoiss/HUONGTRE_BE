@@ -1,8 +1,6 @@
 package com.fpt.service.implementations;
 
-import com.fpt.dto.OptionDTO;
-import com.fpt.dto.ProductDTO;
-import com.fpt.dto.SubscriptionPackageDTO;
+import com.fpt.dto.*;
 import com.fpt.entity.Option;
 import com.fpt.entity.PaymentOrder;
 import com.fpt.entity.Product;
@@ -155,40 +153,52 @@ private ModelMapper modelMapper;
             return null;
         }
 
+        // Category object
+        CategoryDTO categoryDto = null;
+        if (entity.getCategory() != null) {
+            categoryDto = CategoryDTO.builder()
+                    .id(entity.getCategory().getId())
+                    .name(entity.getCategory().getName())
+                    .description(entity.getCategory().getDescription())
+                    .imageUrl(entity.getCategory().getImageUrl())
+                    .build();
+        }
+
+        // Toppings list
+        List<ToppingDTO> toppingDTOs = null;
+        if (entity.getToppings() != null) {
+            toppingDTOs = entity.getToppings().stream()
+                    .map(t -> ToppingDTO.builder()
+                            .id(t.getId())
+                            .name(t.getName())
+                            .price(t.getPrice())
+                            .build())
+                    .toList();
+        }
+
+        // Sizes list
+        List<SizeDTO> sizeDTOs = null;
+        if (entity.getSizes() != null) {
+            sizeDTOs = entity.getSizes().stream()
+                    .map(s -> SizeDTO.builder()
+                            .id(s.getId())
+                            .name(s.getName())
+                            .build())
+                    .toList();
+        }
+
         return ProductDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
                 .imageUrl(entity.getImageUrl())
                 .isActive(entity.getIsActive())
-
-                // Category - sửa lại cho đúng
-                .categoryId(entity.getCategory() != null ? entity.getCategory().getId() : null)
-                .categoryName(entity.getCategory() != null ? entity.getCategory().getName() : null)
-
-//                // BranchProducts (nếu có quan hệ OneToMany hoặc ManyToMany)
-//                .branchProducts(entity.getBranchProducts() != null
-//                        ? entity.getBranchProducts().stream()
-//                        .map(branchProduct -> BranchProductDTO.toDto(branchProduct)) // giả sử có method toDto static
-//                        .toList()
-//                        : null)
-//
-//                // Topping IDs
-//                .toppingIds(entity.getToppings() != null
-//                        ? entity.getToppings().stream()
-//                        .map(Topping::getId)  // hoặc entity topping nào đó
-//                        .toList()
-//                        : null)
-//
-//                // Size IDs
-//                .sizeIds(entity.getSizes() != null
-//                        ? entity.getSizes().stream()
-//                        .map(Size::getId)
-//                        .toList()
-//                        : null)
-
+                .category(categoryDto)
+                .toppings(toppingDTOs)
+                .sizes(sizeDTOs)
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();
     }
+
 }

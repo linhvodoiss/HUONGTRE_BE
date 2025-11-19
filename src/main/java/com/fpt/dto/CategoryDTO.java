@@ -16,5 +16,4 @@ public class CategoryDTO {
 	private String imageUrl;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	private List<ProductDTO> products;
 }
