@@ -29,6 +29,7 @@ public class Category {
 
     private String description;
     private String imageUrl;
+    private Boolean isActive = true;
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
