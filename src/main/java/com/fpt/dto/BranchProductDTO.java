@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class BranchProductDTO {
 	private Long id;
 
-	private Double price;
 	private Boolean isAvailable;
 
 	private LocalDateTime createdAt;

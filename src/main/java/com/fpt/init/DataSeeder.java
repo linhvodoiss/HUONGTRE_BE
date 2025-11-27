@@ -194,8 +194,8 @@ public class DataSeeder implements CommandLineRunner {
     private void seedCategories() {
         if (categoryRepository.count() == 0) {
             List<Category> categories = Arrays.asList(
-                    Category.builder().name("Trà").description("Các loại trà thơm ngon").imageUrl("https://example.com/category-tea.png").isDeleted(false).build(),
-                    Category.builder().name("Nước uống khác").description("Các loại nước uống khác").imageUrl("https://example.com/category-other.png").isDeleted(false).build()
+                    Category.builder().name("Trà").description("Các loại trà thơm ngon").imageUrl("https://example.com/category-tea.png").isActive(true).isDeleted(false).build(),
+                    Category.builder().name("Nước uống khác").description("Các loại nước uống khác").imageUrl("https://example.com/category-other.png").isActive(true).isDeleted(false).build()
             );
             categoryRepository.saveAll(categories);
         }
@@ -282,7 +282,6 @@ public class DataSeeder implements CommandLineRunner {
                     BranchProduct bp = BranchProduct.builder()
                             .branch(branch)
                             .product(product)
-                            .price(1000.0 + i * 500)
                             .isAvailable(true)
                             .isDeleted(false)
                             .build();

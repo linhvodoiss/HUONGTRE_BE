@@ -32,9 +32,6 @@ public class BranchProduct {
     private Product product;
 
     @Column(nullable = false)
-    private Double price;
-
-    @Column(nullable = false)
     private Boolean isAvailable = true;
 
     @Column(name = "is_deleted", nullable = false)

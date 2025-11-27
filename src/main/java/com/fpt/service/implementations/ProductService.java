@@ -38,16 +38,14 @@ private ModelMapper modelMapper;
     public Page<ProductDTO> getAllProduct(Pageable pageable, String search, Boolean isActive) {
         ProductSpecificationBuilder specification = new ProductSpecificationBuilder(search,isActive);
         return repository.findAll(specification.build(), pageable)
-//                .map(this::toDto);
-        .map(product -> modelMapper.map(product, ProductDTO.class));
+                .map(this::toDto);
     }
 
     @Override
     public Page<ProductDTO> getAllProductCustomer( Pageable pageable, String search) {
         ProductSpecificationBuilder specification = new ProductSpecificationBuilder(search,true);
         return repository.findAll(specification.build(), pageable)
-//                .map(this::toDto);
-                .map(product -> modelMapper.map(product, ProductDTO.class));
+                .map(this::toDto);
     }
 
     @Override
@@ -118,8 +116,8 @@ private ModelMapper modelMapper;
 
     @Override
     public void deleteMore(List<Long> ids) {
-        List<Product> packages = repository.findAllById(ids);
-        repository.deleteAll(packages);
+        List<Product> products = repository.findAllById(ids);
+        repository.deleteAll(products);
     }
 
 
@@ -159,22 +157,14 @@ private ModelMapper modelMapper;
             categoryDto = CategoryDTO.builder()
                     .id(entity.getCategory().getId())
                     .name(entity.getCategory().getName())
-                    .description(entity.getCategory().getDescription())
-                    .imageUrl(entity.getCategory().getImageUrl())
+                    .description(entity.getDescription())
+                    .imageUrl(entity.getImageUrl())
+                    .isActive(entity.getIsActive())
+                    .createdAt(entity.getCreatedAt())
+                    .updatedAt(entity.getUpdatedAt())
                     .build();
         }
 
-        // Toppings
-        List<ToppingDTO> toppingDTOs = null;
-        if (entity.getToppings() != null) {
-            toppingDTOs = entity.getToppings().stream()
-                    .map(t -> ToppingDTO.builder()
-                            .id(t.getId())
-                            .name(t.getName())
-                            .price(t.getPrice())
-                            .build())
-                    .toList();
-        }
 
         // Sizes through ProductSize
         List<ProductSizeDTO> sizeDTOs = null;
@@ -194,8 +184,9 @@ private ModelMapper modelMapper;
                 .description(entity.getDescription())
                 .imageUrl(entity.getImageUrl())
                 .isActive(entity.getIsActive())
+                .categoryId(entity.getCategory().getId())
+                .categoryName(entity.getCategory().getName())
                 .category(categoryDto)
-                .toppings(toppingDTOs)
                 .sizes(sizeDTOs)
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())

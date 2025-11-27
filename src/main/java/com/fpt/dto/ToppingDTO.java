@@ -21,5 +21,4 @@ public class ToppingDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private List<Long> productIds;
 }
