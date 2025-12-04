@@ -7,7 +7,8 @@ import com.fpt.exception.AccountBannedException;
 import com.fpt.exception.AccountNotActivatedException;
 import com.fpt.repository.UserRepository;
 import com.fpt.repository.RegistrationUserTokenRepository;
-import com.fpt.service.UserService;
+
+import com.fpt.service.implementations.UserService;
 import com.fpt.websocket.UserSocketService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

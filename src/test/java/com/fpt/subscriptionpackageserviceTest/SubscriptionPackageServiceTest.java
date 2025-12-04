@@ -7,7 +7,8 @@ import com.fpt.entity.SubscriptionPackage;
 import com.fpt.repository.OptionRepository;
 import com.fpt.repository.PaymentOrderRepository;
 import com.fpt.repository.SubscriptionPackageRepository;
-import com.fpt.service.SubscriptionPackageService;
+
+import com.fpt.service.implementations.SubscriptionPackageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

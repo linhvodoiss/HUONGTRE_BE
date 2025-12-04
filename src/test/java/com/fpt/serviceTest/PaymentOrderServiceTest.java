@@ -8,7 +8,8 @@ import com.fpt.repository.LicenseRepository;
 import com.fpt.repository.PaymentOrderRepository;
 import com.fpt.repository.SubscriptionPackageRepository;
 import com.fpt.repository.UserRepository;
-import com.fpt.service.PaymentOrderService;
+
+import com.fpt.service.implementations.PaymentOrderService;
 import com.fpt.specification.PaymentOrderSpecificationBuilder;
 import org.springframework.test.util.ReflectionTestUtils;
 import com.fpt.websocket.PaymentSocketService;

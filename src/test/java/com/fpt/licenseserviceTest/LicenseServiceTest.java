@@ -7,9 +7,9 @@ import com.fpt.form.LicenseCreateForm;
 import com.fpt.form.LicenseVerifyRequestForm;
 import com.fpt.payload.LicenseVerifyResponse;
 import com.fpt.repository.*;
-import com.fpt.service.ILicenseService;
-import com.fpt.service.IPaymentOrderService;
-import com.fpt.service.LicenseService;
+
+import com.fpt.service.implementations.LicenseService;
+import com.fpt.service.interfaces.IPaymentOrderService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
@@ -29,10 +29,12 @@ class LicenseServiceTest {
     @Mock PaymentOrderRepository paymentOrderRepository;
     @Mock UserRepository userRepository;
     @Mock SubscriptionPackageRepository subscriptionRepository;
-    @Mock IPaymentOrderService paymentOrderService;
+    @Mock
+    IPaymentOrderService paymentOrderService;
     @Mock ModelMapper modelMapper;
 
-    @InjectMocks LicenseService service;
+    @InjectMocks
+    LicenseService service;
 
     License license1, license2;
     User user;

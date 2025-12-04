@@ -2,7 +2,8 @@ package com.fpt;
 
 import com.fpt.entity.*;
 import com.fpt.repository.UserRepository;
-import com.fpt.service.UserService;
+
+import com.fpt.service.implementations.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

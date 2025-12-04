@@ -1,7 +1,8 @@
 package com.fpt.serviceTest;
 
 import com.fpt.dto.PayOSDTO;
-import com.fpt.service.PayOSService;
+
+import com.fpt.service.implementations.PayOSService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
