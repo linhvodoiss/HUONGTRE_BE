@@ -177,17 +177,37 @@ private ModelMapper modelMapper;
                             .build())
                     .toList();
         }
+        // Toppings
+        List<ToppingDTO> toppingDTOs = null;
+        if (entity.getToppings() != null) {
+            toppingDTOs = entity.getToppings().stream()
+                    .map(topping -> ToppingDTO.builder()
+                            .id(topping.getId())
+                            .name(topping.getName())
+                            .description(topping.getDescription())
+                            .price(topping.getPrice())
+                            .imageUrl(topping.getImageUrl())
+                            .isAvailable(topping.getIsActive())
+                            .isActive(topping.getIsActive())
+                            .createdAt(topping.getCreatedAt())
+                            .updatedAt(topping.getUpdatedAt())
+                            .build())
+                    .toList();
+        }
+
 
         return ProductDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
+                .price(entity.getPrice())
                 .imageUrl(entity.getImageUrl())
                 .isActive(entity.getIsActive())
                 .categoryId(entity.getCategory().getId())
                 .categoryName(entity.getCategory().getName())
                 .category(categoryDto)
                 .sizes(sizeDTOs)
+                .toppings(toppingDTOs)
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();

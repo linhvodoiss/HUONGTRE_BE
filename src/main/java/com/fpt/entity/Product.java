@@ -30,7 +30,8 @@ public class Product {
 
     private String description;
     private String imageUrl;
-
+    @Column(nullable = false)
+    private Double price;
     private Boolean isActive = true;
 
     @Column(name = "is_deleted", nullable = false)

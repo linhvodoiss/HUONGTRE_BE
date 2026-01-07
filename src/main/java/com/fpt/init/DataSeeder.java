@@ -211,6 +211,7 @@ public class DataSeeder implements CommandLineRunner {
             Product product1 = Product.builder()
                     .name("Trà đào")
                     .description("Trà đào mô tả chi tiết")
+                    .price(40000d)
                     .imageUrl("https://example.com/product-a.png")
                     .category(teaCategory)
                     .productSizes(new ArrayList<>())
@@ -222,6 +223,7 @@ public class DataSeeder implements CommandLineRunner {
             Product product2 = Product.builder()
                     .name("Trà sữa olong")
                     .description("Trà sữa olong mô tả chi tiết")
+                    .price(30000d)
                     .imageUrl("https://example.com/product-b.png")
                     .category(teaCategory)
                     .productSizes(new ArrayList<>())
@@ -233,6 +235,7 @@ public class DataSeeder implements CommandLineRunner {
             Product product3 = Product.builder()
                     .name("Nước lọc")
                     .description("Nước lọc mô tả chi tiết")
+                    .price(5000d)
                     .imageUrl("https://example.com/product-c.png")
                     .category(otherCategory)
                     .productSizes(new ArrayList<>())
@@ -297,7 +300,7 @@ public class DataSeeder implements CommandLineRunner {
 
     private void createProductSize(Product product, List<Size> sizes) {
         for (Size size : sizes) {
-            double basePrice = 20000;
+
             double extra = switch (size.getName()) {
                 case "M" -> 5000;
                 case "L" -> 10000;
@@ -306,7 +309,7 @@ public class DataSeeder implements CommandLineRunner {
             ProductSize ps = ProductSize.builder()
                     .product(product)
                     .size(size)
-                    .price(basePrice + extra)
+                    .price(extra)
                     .isDeleted(false)
                     .build();
             product.getProductSizes().add(ps);

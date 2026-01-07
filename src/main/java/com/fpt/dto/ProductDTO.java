@@ -1,5 +1,6 @@
 package com.fpt.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,10 +9,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDTO {
     private Long id;
     private String name;
     private String description;
+    private Double price;
     private String imageUrl;
     private Boolean isActive;
     private LocalDateTime createdAt;
@@ -21,5 +24,5 @@ public class ProductDTO {
     private String categoryName;
     private CategoryDTO category;
     private List<ProductSizeDTO> sizes;
-
+    private List<ToppingDTO> toppings;
 }
