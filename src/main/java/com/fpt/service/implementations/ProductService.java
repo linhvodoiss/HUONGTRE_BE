@@ -195,6 +195,40 @@ private ModelMapper modelMapper;
                     .toList();
         }
 
+        // Ices
+        List<IceDTO> iceDTOs = null;
+        if (entity.getIces() != null) {
+            iceDTOs = entity.getIces().stream()
+                    .map(topping -> IceDTO.builder()
+                            .id(topping.getId())
+                            .name(topping.getName())
+                            .description(topping.getDescription())
+                            .imageUrl(topping.getImageUrl())
+                            .isAvailable(topping.getIsActive())
+                            .isActive(topping.getIsActive())
+                            .createdAt(topping.getCreatedAt())
+                            .updatedAt(topping.getUpdatedAt())
+                            .build())
+                    .toList();
+        }
+
+        // Sugars
+        List<SugarDTO> sugarDTOS = null;
+        if (entity.getSugars() != null) {
+            sugarDTOS = entity.getSugars().stream()
+                    .map(topping -> SugarDTO.builder()
+                            .id(topping.getId())
+                            .name(topping.getName())
+                            .description(topping.getDescription())
+                            .imageUrl(topping.getImageUrl())
+                            .isAvailable(topping.getIsActive())
+                            .isActive(topping.getIsActive())
+                            .createdAt(topping.getCreatedAt())
+                            .updatedAt(topping.getUpdatedAt())
+                            .build())
+                    .toList();
+        }
+
 
         return ProductDTO.builder()
                 .id(entity.getId())
@@ -208,6 +242,8 @@ private ModelMapper modelMapper;
                 .category(categoryDto)
                 .sizes(sizeDTOs)
                 .toppings(toppingDTOs)
+                .sugars(sugarDTOS)
+                .ices(iceDTOs)
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();

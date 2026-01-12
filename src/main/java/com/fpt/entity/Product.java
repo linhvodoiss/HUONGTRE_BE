@@ -59,6 +59,20 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "topping_id")
     )
     private List<Topping> toppings = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "ProductIce",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "ice_id")
+    )
+    private List<Ice> ices = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "ProductSugar",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "sugar_id")
+    )
+    private List<Sugar> sugars = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

@@ -23,6 +23,8 @@ public class DataSeeder implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final SizeRepository sizeRepository;
     private final ToppingRepository toppingRepository;
+    private final SugarRepository sugarRepository;
+    private final IceRepository iceRepository;
     private final CategoryRepository categoryRepository;
     private final ProductSizeRepository productSizeRepository;
     @Transactional
@@ -35,6 +37,8 @@ public class DataSeeder implements CommandLineRunner {
         seedLicenses();
         seedSizes();
         seedToppings();
+        seedIces();
+        seedSugars();
         seedCategories();
         seedProducts();
         seedBranches();
@@ -191,6 +195,28 @@ public class DataSeeder implements CommandLineRunner {
         }
     }
 
+    private void seedIces() {
+        if (iceRepository.count() == 0) {
+            List<Ice> ices = Arrays.asList(
+                    Ice.builder().name("0% Đá").description("0% Đá").isActive(true).isDeleted(false).isAvailable(true).build(),
+                    Ice.builder().name("50% Đá").description("50% Đá").isActive(true).isDeleted(false).isAvailable(true).build(),
+                    Ice.builder().name("100% Đá").description("100% Đá").isActive(true).isDeleted(false).isAvailable(true).build()
+            );
+            iceRepository.saveAll(ices);
+        }
+    }
+
+    private void seedSugars() {
+        if (sugarRepository.count() == 0) {
+            List<Sugar> sugars = Arrays.asList(
+                    Sugar.builder().name("Không Đường").description("Không Đường").isActive(true).isDeleted(false).isAvailable(true).build(),
+                    Sugar.builder().name("50% Đường").description("50% Đường").isActive(true).isDeleted(false).isAvailable(true).build(),
+                    Sugar.builder().name("100% Đường").description("100% Đường").isActive(true).isDeleted(false).isAvailable(true).build()
+            );
+            sugarRepository.saveAll(sugars);
+        }
+    }
+
     private void seedCategories() {
         if (categoryRepository.count() == 0) {
             List<Category> categories = Arrays.asList(
@@ -216,6 +242,8 @@ public class DataSeeder implements CommandLineRunner {
                     .category(teaCategory)
                     .productSizes(new ArrayList<>())
                     .toppings(new ArrayList<>())
+                    .ices(new ArrayList<>())
+                    .sugars(new ArrayList<>())
                     .branchProducts(new ArrayList<>())
                     .isActive(true).isDeleted(false)
                     .build();
@@ -228,6 +256,8 @@ public class DataSeeder implements CommandLineRunner {
                     .category(teaCategory)
                     .productSizes(new ArrayList<>())
                     .toppings(new ArrayList<>())
+                    .ices(new ArrayList<>())
+                    .sugars(new ArrayList<>())
                     .branchProducts(new ArrayList<>())
                     .isActive(true).isDeleted(false)
                     .build();
@@ -240,6 +270,8 @@ public class DataSeeder implements CommandLineRunner {
                     .category(otherCategory)
                     .productSizes(new ArrayList<>())
                     .toppings(new ArrayList<>())
+                    .ices(new ArrayList<>())
+                    .sugars(new ArrayList<>())
                     .branchProducts(new ArrayList<>())
                     .isActive(true).isDeleted(false)
                     .build();
@@ -253,6 +285,25 @@ public class DataSeeder implements CommandLineRunner {
                 product1.setToppings(new ArrayList<>(toppings.subList(0,2))); // Cheese + Bacon
                 product2.setToppings(new ArrayList<>(toppings.subList(1,3))); // Bacon + Mushroom
                 product3.setToppings(new ArrayList<>(Arrays.asList(toppings.get(0), toppings.get(2)))); // Cheese + Mushroom
+            }
+            productRepository.saveAll(products);
+
+
+            // --- gán ices ---
+            List<Ice> ices = iceRepository.findAll();
+            if (!ices.isEmpty()) {
+                product1.setIces(new ArrayList<>(ices.subList(0,2)));
+                product2.setIces(new ArrayList<>(ices.subList(1,3)));
+                product3.setIces(new ArrayList<>(Arrays.asList(ices.get(0), ices.get(2))));
+            }
+            productRepository.saveAll(products);
+
+            // --- gán sugars ---
+            List<Sugar> sugars = sugarRepository.findAll();
+            if (!toppings.isEmpty()) {
+                product1.setSugars(new ArrayList<>(sugars.subList(0,2)));
+                product2.setSugars(new ArrayList<>(sugars.subList(1,3)));
+                product3.setSugars(new ArrayList<>(Arrays.asList(sugars.get(0), sugars.get(2))));
             }
             productRepository.saveAll(products);
 

@@ -25,4 +25,6 @@ public class ProductDTO {
     private CategoryDTO category;
     private List<ProductSizeDTO> sizes;
     private List<ToppingDTO> toppings;
+    private List<IceDTO> ices;
+    private List<SugarDTO> sugars;
 }
