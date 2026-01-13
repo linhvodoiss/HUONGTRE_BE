@@ -29,9 +29,18 @@ public class CategoryController {
     private final ICategoryService service;
 
     @GetMapping
-    public List<CategoryDTO> getAll() {
-        return service.getAll();
+    public ResponseEntity<SuccessResponse<List<CategoryDTO>>> getAll() {
+        List<CategoryDTO> dto = service.getAll();
+
+        SuccessResponse<List<CategoryDTO>> response = new SuccessResponse<>(
+                HttpServletResponse.SC_OK,
+                "Lấy danh mục thành công!",
+                dto
+        );
+
+        return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/list")
     public ResponseEntity<PaginatedResponse<CategoryDTO>> getAllCategories(

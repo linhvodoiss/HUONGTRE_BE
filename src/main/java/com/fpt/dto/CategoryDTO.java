@@ -1,5 +1,6 @@
 package com.fpt.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryDTO {
 	private Long id;
 	private String name;
@@ -17,4 +19,5 @@ public class CategoryDTO {
     private Boolean isActive;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+    private List<ProductDTO> products;
 }
