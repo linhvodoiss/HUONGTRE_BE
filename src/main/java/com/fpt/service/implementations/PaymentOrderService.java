@@ -369,16 +369,7 @@ public class PaymentOrderService implements IPaymentOrderService {
         SubscriptionPackageDTO subscriptionDto = null;
 
         if (subscription != null) {
-            List<OptionDTO> optionDTOs = subscription.getOptions().stream()
-                    .filter(option -> Boolean.TRUE.equals(option.getIsActive()))
-                    .map(option -> OptionDTO.builder()
-                            .id(option.getId())
-                            .name(option.getName())
-                            .isActive(option.getIsActive())
-                            .createdAt(option.getCreatedAt())
-                            .updatedAt(option.getUpdatedAt())
-                            .build())
-                    .toList();
+
 
             subscriptionDto = SubscriptionPackageDTO.builder()
                     .id(subscription.getId())
@@ -388,7 +379,7 @@ public class PaymentOrderService implements IPaymentOrderService {
                     .billingCycle(subscription.getBillingCycle().name())
                     .typePackage(subscription.getTypePackage().name())
                     .isActive(subscription.getIsActive())
-                    .options(optionDTOs)
+
                     .simulatedCount(subscription.getSimulatedCount())
                     .createdAt(subscription.getCreatedAt())
                     .updatedAt(subscription.getUpdatedAt())

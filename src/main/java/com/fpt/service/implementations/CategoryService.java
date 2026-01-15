@@ -2,6 +2,7 @@ package com.fpt.service.implementations;
 import com.fpt.dto.*;
 import com.fpt.entity.*;
 import com.fpt.repository.CategoryRepository;
+import com.fpt.repository.OptionRepository;
 import com.fpt.repository.ProductRepository;
 import com.fpt.service.interfaces.ICategoryService;
 import com.fpt.specification.CategorySpecificationBuilder;
@@ -14,7 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +26,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class CategoryService implements ICategoryService {
     private final CategoryRepository repository;
+    private final ProductRepository productRepository;
+    private final OptionRepository optionRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Override
@@ -45,7 +51,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public List<CategoryDTO> getAll() {
         return repository.findAll().stream()
-                .map(this::toDtoSuper)
+                .map(this::toDto)
                 .toList();
     }
 
@@ -92,109 +98,95 @@ public class CategoryService implements ICategoryService {
         repository.deleteAll(categories);
     }
 
-    private CategoryDTO toDto(Category category) {
-            return modelMapper.map(category, CategoryDTO.class);
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategoryMenuDTO> getFullMenu() {
+
+        List<Category> categories =
+                repository.findByIsActiveTrueOrderByIdAsc();
+
+        return categories.stream()
+                .map(this::mapCategoryToMenuDTO)
+                .toList();
     }
+    ////////////////////////////////Response menu///////////////////////////////
+    private CategoryMenuDTO mapCategoryToMenuDTO(Category category) {
 
-    private CategoryDTO toDtoSuper(Category category) {
+        List<Product> products =
+                productRepository.findMenuProductsByCategory(category.getId());
 
-        List<ProductDTO> productDTOS = null;
+        List<ProductDetailDTO> productDTOs = products.stream()
+                .map(this::mapProductToDetailDTO)
+                .toList();
 
-        if (category.getProducts() != null) {
-            productDTOS = category.getProducts().stream()
-                    .map(product -> {
-
-                        // ===== Sizes =====
-                        List<ProductSizeDTO> sizeDTOs = null;
-                        if (product.getProductSizes() != null) {
-                            sizeDTOs = product.getProductSizes().stream()
-                                    .map(ps -> ProductSizeDTO.builder()
-                                            .sizeId(ps.getSize().getId())
-                                            .sizeName(ps.getSize().getName())
-                                            .price(ps.getPrice())
-                                            .build())
-                                    .toList();
-                        }
-
-                        // ===== Toppings =====
-                        List<ToppingDTO> toppingDTOs = null;
-                        if (product.getToppings() != null) {
-                            toppingDTOs = product.getToppings().stream()
-                                    .map(topping -> ToppingDTO.builder()
-                                            .id(topping.getId())
-                                            .name(topping.getName())
-                                            .description(topping.getDescription())
-                                            .price(topping.getPrice())
-                                            .imageUrl(topping.getImageUrl())
-                                            .isAvailable(topping.getIsActive())
-                                            .isActive(topping.getIsActive())
-                                            .createdAt(topping.getCreatedAt())
-                                            .updatedAt(topping.getUpdatedAt())
-                                            .build())
-                                    .toList();
-                        }
-
-                        // ===== Ices =====
-                        List<IceDTO> iceDTOs = null;
-                        if (product.getIces() != null) {
-                            iceDTOs = product.getIces().stream()
-                                    .map(ice -> IceDTO.builder()
-                                            .id(ice.getId())
-                                            .name(ice.getName())
-                                            .description(ice.getDescription())
-                                            .imageUrl(ice.getImageUrl())
-                                            .isAvailable(ice.getIsActive())
-                                            .isActive(ice.getIsActive())
-                                            .createdAt(ice.getCreatedAt())
-                                            .updatedAt(ice.getUpdatedAt())
-                                            .build())
-                                    .toList();
-                        }
-
-                        // ===== Sugars =====
-                        List<SugarDTO> sugarDTOs = null;
-                        if (product.getSugars() != null) {
-                            sugarDTOs = product.getSugars().stream()
-                                    .map(sugar -> SugarDTO.builder()
-                                            .id(sugar.getId())
-                                            .name(sugar.getName())
-                                            .description(sugar.getDescription())
-                                            .imageUrl(sugar.getImageUrl())
-                                            .isAvailable(sugar.getIsActive())
-                                            .isActive(sugar.getIsActive())
-                                            .createdAt(sugar.getCreatedAt())
-                                            .updatedAt(sugar.getUpdatedAt())
-                                            .build())
-                                    .toList();
-                        }
-
-                        return ProductDTO.builder()
-                                .id(product.getId())
-                                .name(product.getName())
-                                .description(product.getDescription())
-                                .imageUrl(product.getImageUrl())
-                                .isActive(product.getIsActive())
-                                .sizes(sizeDTOs)
-                                .toppings(toppingDTOs)
-                                .ices(iceDTOs)
-                                .sugars(sugarDTOs)
-                                .createdAt(product.getCreatedAt())
-                                .updatedAt(product.getUpdatedAt())
-                                .build();
-                    })
-                    .toList();
-        }
-
-        return CategoryDTO.builder()
+        return CategoryMenuDTO.builder()
                 .id(category.getId())
                 .name(category.getName())
                 .description(category.getDescription())
                 .imageUrl(category.getImageUrl())
-                .isActive(category.getIsActive())
-                .products(productDTOS)
-                .createdAt(category.getCreatedAt())
-                .updatedAt(category.getUpdatedAt())
+                .products(productDTOs)
                 .build();
+    }
+
+
+
+    private ProductDetailDTO mapProductToDetailDTO(Product product) {
+
+        List<ProductOptionGroup> pogs = product.getProductOptionGroups();
+
+        List<OptionGroup> optionGroups = pogs.stream()
+                .map(ProductOptionGroup::getOptionGroup)
+                .toList();
+
+        List<Long> optionGroupIds = optionGroups.stream()
+                .map(OptionGroup::getId)
+                .toList();
+
+        List<Option> options = optionRepository.findActiveByOptionGroupIds(optionGroupIds);
+
+        Map<Long, List<OptionDTO>> optionMap =
+                options.stream()
+                        .collect(Collectors.groupingBy(
+                                o -> o.getOptionGroup().getId(),
+                                Collectors.mapping(this::toOptionDTO, Collectors.toList())
+                        ));
+
+        List<OptionGroupDTO> ogDTOs = optionGroups.stream()
+                .map(og -> OptionGroupDTO.builder()
+                        .id(og.getId())
+                        .name(og.getName())
+                        .selectType(og.getSelectType())
+                        .required(og.getRequired())
+                        .minSelect(og.getMinSelect())
+                        .maxSelect(og.getMaxSelect())
+                        .displayOrder(og.getDisplayOrder())
+                        .options(optionMap.getOrDefault(og.getId(), List.of()))
+                        .build())
+                .toList();
+
+        return ProductDetailDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .imageUrl(product.getImageUrl())
+                .description(product.getDescription())
+                .optionGroups(ogDTOs)
+                .build();
+    }
+
+    private OptionDTO toOptionDTO(Option option) {
+        return OptionDTO.builder()
+                .id(option.getId())
+                .name(option.getName())
+                .description(option.getDescription())
+                .price(option.getPrice())
+                .build();
+    }
+
+
+////////////////////////////////Response base category///////////////////////////////
+    private CategoryDTO toDto(Category category) {
+        return modelMapper.map(category, CategoryDTO.class);
     }
 
 

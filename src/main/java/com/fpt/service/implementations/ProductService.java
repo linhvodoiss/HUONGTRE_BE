@@ -73,39 +73,6 @@ private ModelMapper modelMapper;
     }
 
 
-//    public SubscriptionPackageDTO create(SubscriptionPackageDTO dto) {
-//        return toDto(repository.save(toEntity(dto)));
-//    }
-
-//    @Override
-//    public SubscriptionPackageDTO update(Long id, SubscriptionPackageDTO dto) {
-//        SubscriptionPackage entity = repository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Subscription not found"));
-//
-//        entity.setName(dto.getName());
-//        entity.setPrice(dto.getPrice());
-//        entity.setDiscount(dto.getDiscount());
-//        entity.setBillingCycle(SubscriptionPackage.BillingCycle.valueOf(dto.getBillingCycle()));
-//        entity.setIsActive(dto.getIsActive());
-//        entity.setSimulatedCount(dto.getSimulatedCount());
-//        entity.setDescription(dto.getDescription());
-//        if (dto.getOptionsId() != null && !dto.getOptionsId().isEmpty()) {
-//            List<Option> options = optionRepository.findAllById(dto.getOptionsId());
-//            if (options.size() != dto.getOptionsId().size()) {
-//                throw new RuntimeException("Some Option IDs not found!");
-//            }
-//            entity.setOptions(options);
-//        } else {
-//            entity.setOptions(null);
-//        }
-//
-//
-//        return toDto(repository.save(entity));
-//    }
-
-
-
-
     @Override
     public void delete(Long id) {
         Product product = repository.findById(id)
@@ -120,30 +87,6 @@ private ModelMapper modelMapper;
         repository.deleteAll(products);
     }
 
-
-//    @Override
-//    public SubscriptionPackageDTO create(SubscriptionPackageDTO dto) {
-//        SubscriptionPackage entity = new SubscriptionPackage();
-//        entity.setName(dto.getName());
-//        entity.setPrice(dto.getPrice());
-//        entity.setDiscount(dto.getDiscount());
-//        entity.setBillingCycle(SubscriptionPackage.BillingCycle.valueOf(dto.getBillingCycle()));
-//        entity.setTypePackage(SubscriptionPackage.TypePackage.valueOf(dto.getTypePackage()));
-//        entity.setSimulatedCount(0L);
-//        entity.setDescription(dto.getDescription());
-//
-//        if (dto.getOptionsId() != null && !dto.getOptionsId().isEmpty()) {
-//            List<Option> options = optionRepository.findAllById(dto.getOptionsId());
-//            if (options.size() != dto.getOptionsId().size()) {
-//                throw new RuntimeException("One or more options not found");
-//            }
-//            entity.setOptions(options);
-//        }
-//
-//
-//        SubscriptionPackage saved = repository.save(entity);
-//        return toDto(saved);
-//    }
 
 
     private ProductDTO toDto(Product entity) {
@@ -166,70 +109,6 @@ private ModelMapper modelMapper;
         }
 
 
-        // Sizes through ProductSize
-        List<ProductSizeDTO> sizeDTOs = null;
-        if (entity.getProductSizes() != null) {
-            sizeDTOs = entity.getProductSizes().stream()
-                    .map(ps -> ProductSizeDTO.builder()
-                            .sizeId(ps.getSize().getId())
-                            .sizeName(ps.getSize().getName())
-                            .price(ps.getPrice())
-                            .build())
-                    .toList();
-        }
-        // Toppings
-        List<ToppingDTO> toppingDTOs = null;
-        if (entity.getToppings() != null) {
-            toppingDTOs = entity.getToppings().stream()
-                    .map(topping -> ToppingDTO.builder()
-                            .id(topping.getId())
-                            .name(topping.getName())
-                            .description(topping.getDescription())
-                            .price(topping.getPrice())
-                            .imageUrl(topping.getImageUrl())
-                            .isAvailable(topping.getIsActive())
-                            .isActive(topping.getIsActive())
-                            .createdAt(topping.getCreatedAt())
-                            .updatedAt(topping.getUpdatedAt())
-                            .build())
-                    .toList();
-        }
-
-        // Ices
-        List<IceDTO> iceDTOs = null;
-        if (entity.getIces() != null) {
-            iceDTOs = entity.getIces().stream()
-                    .map(topping -> IceDTO.builder()
-                            .id(topping.getId())
-                            .name(topping.getName())
-                            .description(topping.getDescription())
-                            .imageUrl(topping.getImageUrl())
-                            .isAvailable(topping.getIsActive())
-                            .isActive(topping.getIsActive())
-                            .createdAt(topping.getCreatedAt())
-                            .updatedAt(topping.getUpdatedAt())
-                            .build())
-                    .toList();
-        }
-
-        // Sugars
-        List<SugarDTO> sugarDTOS = null;
-        if (entity.getSugars() != null) {
-            sugarDTOS = entity.getSugars().stream()
-                    .map(topping -> SugarDTO.builder()
-                            .id(topping.getId())
-                            .name(topping.getName())
-                            .description(topping.getDescription())
-                            .imageUrl(topping.getImageUrl())
-                            .isAvailable(topping.getIsActive())
-                            .isActive(topping.getIsActive())
-                            .createdAt(topping.getCreatedAt())
-                            .updatedAt(topping.getUpdatedAt())
-                            .build())
-                    .toList();
-        }
-
-
         return ProductDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())
@@ -240,10 +119,6 @@ private ModelMapper modelMapper;
                 .categoryId(entity.getCategory().getId())
                 .categoryName(entity.getCategory().getName())
                 .category(categoryDto)
-                .sizes(sizeDTOs)
-                .toppings(toppingDTOs)
-                .sugars(sugarDTOS)
-                .ices(iceDTOs)
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();

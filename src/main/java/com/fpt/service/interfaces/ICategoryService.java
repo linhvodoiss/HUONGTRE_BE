@@ -1,6 +1,7 @@
 package com.fpt.service.interfaces;
 
 import com.fpt.dto.CategoryDTO;
+import com.fpt.dto.CategoryMenuDTO;
 import com.fpt.dto.ProductDTO;
 import com.fpt.entity.Category;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ public interface ICategoryService {
     Page<CategoryDTO> getAllCategoryCustomer(Pageable pageable, String search);
     List<CategoryDTO> convertToDto(List<Category> data);
     List<CategoryDTO> getAll();
+    List<CategoryMenuDTO> getFullMenu();
     CategoryDTO getById(Long id);
     CategoryDTO create(CategoryDTO dto);
     CategoryDTO update(Long id, CategoryDTO dto);

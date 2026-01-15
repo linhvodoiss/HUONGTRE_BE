@@ -23,8 +23,5 @@ public class ProductDTO {
     private Long categoryId;
     private String categoryName;
     private CategoryDTO category;
-    private List<ProductSizeDTO> sizes;
-    private List<ToppingDTO> toppings;
-    private List<IceDTO> ices;
-    private List<SugarDTO> sugars;
+
 }

@@ -5,15 +5,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ProductSizeDTO {
-    private Long sizeId;
-    private String sizeName;
+public class ProductWithOptionsDTO {
+    private Long id;
+    private String name;
     private Double price;
+
+    private String imageUrl;
+    private String description;
+
+    private List<OptionGroupDTO> optionGroups;
 }

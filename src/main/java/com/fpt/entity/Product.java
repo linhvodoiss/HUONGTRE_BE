@@ -30,8 +30,10 @@ public class Product {
 
     private String description;
     private String imageUrl;
+
     @Column(nullable = false)
     private Double price;
+
     private Boolean isActive = true;
 
     @Column(name = "is_deleted", nullable = false)
@@ -45,35 +47,15 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Khởi tạo List để tránh lỗi cascade
+    // Branch
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BranchProduct> branchProducts = new ArrayList<>();
 
+    // 🔥 QUAN TRỌNG: Product ↔ OptionGroup
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductSize> productSizes = new ArrayList<>();
+    private List<ProductOptionGroup> productOptionGroups = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "ProductTopping",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "topping_id")
-    )
-    private List<Topping> toppings = new ArrayList<>();
-    @ManyToMany
-    @JoinTable(
-            name = "ProductIce",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "ice_id")
-    )
-    private List<Ice> ices = new ArrayList<>();
-    @ManyToMany
-    @JoinTable(
-            name = "ProductSugar",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "sugar_id")
-    )
-    private List<Sugar> sugars = new ArrayList<>();
-
+    // Category
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;

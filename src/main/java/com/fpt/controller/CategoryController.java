@@ -1,6 +1,7 @@
 package com.fpt.controller;
 
 import com.fpt.dto.CategoryDTO;
+import com.fpt.dto.CategoryMenuDTO;
 import com.fpt.dto.OptionDTO;
 import com.fpt.dto.ProductDTO;
 import com.fpt.payload.PaginatedResponse;
@@ -35,6 +36,17 @@ public class CategoryController {
         SuccessResponse<List<CategoryDTO>> response = new SuccessResponse<>(
                 HttpServletResponse.SC_OK,
                 "Lấy danh mục thành công!",
+                dto
+        );
+
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/menu")
+    public ResponseEntity<SuccessResponse<List<CategoryMenuDTO>>> getFullMenu() {
+        List<CategoryMenuDTO> dto = service.getFullMenu();
+        SuccessResponse<List<CategoryMenuDTO>> response = new SuccessResponse<>(
+                HttpServletResponse.SC_OK,
+                "Lấy menu thành công!",
                 dto
         );
 

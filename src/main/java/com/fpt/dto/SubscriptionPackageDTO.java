@@ -24,8 +24,6 @@ public class SubscriptionPackageDTO {
     private String billingCycle;
     private String typePackage;
     private Boolean isActive;
-    private List<OptionDTO> options;
-    private List<Long> optionsId;
     private Long simulatedCount;
     private Long realCount;
     private Long totalCount;

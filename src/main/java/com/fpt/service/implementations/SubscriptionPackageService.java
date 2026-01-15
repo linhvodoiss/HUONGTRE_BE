@@ -91,15 +91,7 @@ private ModelMapper modelMapper;
         entity.setIsActive(dto.getIsActive());
         entity.setSimulatedCount(dto.getSimulatedCount());
         entity.setDescription(dto.getDescription());
-        if (dto.getOptionsId() != null && !dto.getOptionsId().isEmpty()) {
-            List<Option> options = optionRepository.findAllById(dto.getOptionsId());
-            if (options.size() != dto.getOptionsId().size()) {
-                throw new RuntimeException("Some Option IDs not found!");
-            }
-            entity.setOptions(options);
-        } else {
-            entity.setOptions(null);
-        }
+
 
 
         return toDto(repository.save(entity));
@@ -134,13 +126,7 @@ private ModelMapper modelMapper;
         entity.setSimulatedCount(0L);
         entity.setDescription(dto.getDescription());
 
-        if (dto.getOptionsId() != null && !dto.getOptionsId().isEmpty()) {
-            List<Option> options = optionRepository.findAllById(dto.getOptionsId());
-            if (options.size() != dto.getOptionsId().size()) {
-                throw new RuntimeException("One or more options not found");
-            }
-            entity.setOptions(options);
-        }
+
 
 
         SubscriptionPackage saved = repository.save(entity);
@@ -191,16 +177,7 @@ private ModelMapper modelMapper;
 
 
     private SubscriptionPackageDTO toDto(SubscriptionPackage entity) {
-        List<OptionDTO> optionDTOs = entity.getOptions().stream()
-                .filter(option -> Boolean.TRUE.equals(option.getIsActive()))
-                .map(option -> OptionDTO.builder()
-                        .id(option.getId())
-                        .name(option.getName())
-                        .isActive(option.getIsActive())
-                        .createdAt(option.getCreatedAt())
-                        .updatedAt(option.getUpdatedAt())
-                        .build())
-                .collect(Collectors.toList());
+
         Long realCount = paymentOrderRepository
                 .countBySubscriptionPackageIdAndPaymentStatus(entity.getId(), PaymentOrder.PaymentStatus.SUCCESS);
         if (realCount == null) {
@@ -215,7 +192,6 @@ private ModelMapper modelMapper;
                 .billingCycle(entity.getBillingCycle().name())
                 .typePackage(entity.getTypePackage().name())
                 .isActive(entity.getIsActive())
-                .options(optionDTOs)
                 .simulatedCount(entity.getSimulatedCount())
                 .realCount(realCount)
                 .createdAt(entity.getCreatedAt())

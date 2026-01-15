@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 public class OptionDTO {
     private Long id;
     private String name;
+    private String description;
+    private Integer price;
     private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

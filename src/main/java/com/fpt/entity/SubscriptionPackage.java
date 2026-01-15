@@ -45,14 +45,6 @@ public class SubscriptionPackage {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
-    @ManyToMany
-    @JoinTable(
-            name = "subscription_package_option",
-            joinColumns = @JoinColumn(name = "subscription_package_id"),
-            inverseJoinColumns = @JoinColumn(name = "option_id")
-    )
-    private List<Option> options;
-
     private Long simulatedCount=0L;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

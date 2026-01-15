@@ -1,7 +1,6 @@
 package com.fpt.specification;
 
 import com.fpt.entity.Category;
-import com.fpt.entity.Topping;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
