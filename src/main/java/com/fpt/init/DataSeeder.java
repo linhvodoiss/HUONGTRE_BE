@@ -58,7 +58,7 @@ public class DataSeeder implements CommandLineRunner {
                         .role(Role.ADMIN)
                         .status(UserStatus.ACTIVE)
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build(),
 
                 User.builder()
@@ -71,7 +71,7 @@ public class DataSeeder implements CommandLineRunner {
                         .role(Role.CUSTOMER)
                         .status(UserStatus.ACTIVE)
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build()
         ));
     }
@@ -85,13 +85,13 @@ public class DataSeeder implements CommandLineRunner {
                         .name("Trà")
                         .description("Các loại trà")
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build(),
                 Category.builder()
                         .name("Nước khác")
                         .description("Nước uống khác")
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build()
         ));
     }
@@ -109,7 +109,7 @@ public class DataSeeder implements CommandLineRunner {
                         .price(40000d)
                         .category(tea)
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build(),
 
                 Product.builder()
@@ -117,7 +117,7 @@ public class DataSeeder implements CommandLineRunner {
                         .price(30000d)
                         .category(tea)
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build(),
 
                 Product.builder()
@@ -125,7 +125,7 @@ public class DataSeeder implements CommandLineRunner {
                         .price(5000d)
                         .category(other)
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build()
         ));
     }
@@ -144,14 +144,14 @@ public class DataSeeder implements CommandLineRunner {
                         .maxSelect(1)
                         .displayOrder(1)
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build()
         );
 
         optionRepository.saveAll(List.of(
-                Option.builder().optionGroup(ice).name("0%").price(0).displayOrder(1).isActive(true).isDeleted(false).build(),
-                Option.builder().optionGroup(ice).name("50%").price(0).displayOrder(1).isActive(true).isDeleted(false).build(),
-                Option.builder().optionGroup(ice).name("100%").price(0).displayOrder(1).isActive(true).isDeleted(false).build()
+                Option.builder().optionGroup(ice).name("0%").price(0.0).displayOrder(1).isActive(true).build(),
+                Option.builder().optionGroup(ice).name("50%").price(0.0).displayOrder(1).isActive(true).build(),
+                Option.builder().optionGroup(ice).name("100%").price(0.0).displayOrder(1).isActive(true).build()
         ));
 
         // SUGAR
@@ -164,14 +164,14 @@ public class DataSeeder implements CommandLineRunner {
                         .maxSelect(1)
                         .displayOrder(2)
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build()
         );
 
         optionRepository.saveAll(List.of(
-                Option.builder().optionGroup(sugar).name("0%").price(0).isActive(true).isDeleted(false).build(),
-                Option.builder().optionGroup(sugar).name("50%").price(0).isActive(true).isDeleted(false).build(),
-                Option.builder().optionGroup(sugar).name("100%").price(0).isActive(true).isDeleted(false).build()
+                Option.builder().optionGroup(sugar).name("0%").price(0.0).isActive(true).build(),
+                Option.builder().optionGroup(sugar).name("50%").price(0.0).isActive(true).build(),
+                Option.builder().optionGroup(sugar).name("100%").price(0.0).isActive(true).build()
         ));
 
         // TOPPING
@@ -184,14 +184,14 @@ public class DataSeeder implements CommandLineRunner {
                         .maxSelect(3)
                         .displayOrder(3)
                         .isActive(true)
-                        .isDeleted(false)
+                        
                         .build()
         );
 
         optionRepository.saveAll(List.of(
-                Option.builder().optionGroup(topping).name("Trân châu").price(5000).isActive(true).isDeleted(false).build(),
-                Option.builder().optionGroup(topping).name("Pudding").price(7000).isActive(true).isDeleted(false).build(),
-                Option.builder().optionGroup(topping).name("Thạch").price(3000).isActive(true).isDeleted(false).build()
+                Option.builder().optionGroup(topping).name("Trân châu").price(5000.0).isActive(true).build(),
+                Option.builder().optionGroup(topping).name("Pudding").price(7000.0).isActive(true).build(),
+                Option.builder().optionGroup(topping).name("Thạch").price(3000.0).isActive(true).build()
         ));
     }
 
@@ -219,8 +219,8 @@ public class DataSeeder implements CommandLineRunner {
         if (branchRepository.count() > 0) return;
 
         branchRepository.saveAll(List.of(
-                Branch.builder().name("Branch A").isActive(true).isDeleted(false).build(),
-                Branch.builder().name("Branch B").isActive(true).isDeleted(false).build()
+                Branch.builder().name("Branch A").isActive(true).build(),
+                Branch.builder().name("Branch B").isActive(true).build()
         ));
     }
 
@@ -234,7 +234,7 @@ public class DataSeeder implements CommandLineRunner {
                                 .branch(branch)
                                 .product(product)
                                 .isAvailable(true)
-                                .isDeleted(false)
+                                
                                 .build()
                 );
             }
@@ -251,7 +251,7 @@ public class DataSeeder implements CommandLineRunner {
                             .billingCycle(cycle)
                             .price(2000f)
                             .isActive(true)
-                            .isDeleted(false)
+                            
                             .build()
             );
         }

@@ -49,6 +49,7 @@ public class OptionGroup {
     @Column(nullable = false)
     private Boolean isActive = true;
 
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 

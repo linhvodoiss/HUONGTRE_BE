@@ -41,6 +41,7 @@ public class License {
     private String hardwareId;
     @Column(name = "can_used")
     private Boolean canUsed = true;
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 

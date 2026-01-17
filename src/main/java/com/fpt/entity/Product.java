@@ -36,6 +36,7 @@ public class Product {
 
     private Boolean isActive = true;
 
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 

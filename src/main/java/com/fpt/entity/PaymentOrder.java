@@ -53,6 +53,7 @@ public class PaymentOrder {
     private PaymentMethod paymentMethod = PaymentMethod.BANK;
     @Column(name = "license_created")
     private Boolean licenseCreated = false;
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
     @Column(name = "date_transfer")

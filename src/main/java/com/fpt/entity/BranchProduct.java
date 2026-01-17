@@ -33,7 +33,7 @@ public class BranchProduct {
 
     @Column(nullable = false)
     private Boolean isAvailable = true;
-
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 

@@ -66,8 +66,9 @@ public class User implements Serializable {
 	@Column(name = "`status`", nullable = false)
 	private UserStatus status = UserStatus.NOT_ACTIVE;
 	private Boolean isActive = true;
-	@Column(name = "is_deleted", nullable = false)
-	private Boolean isDeleted = false;
+    @Builder.Default
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
 
 	@Column(name = "avatarUrl")
 	private String avatarUrl;
