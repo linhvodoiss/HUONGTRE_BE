@@ -22,4 +22,6 @@ public class CustomerDTO {
     private String note;
     private Integer totalOrders;
     private Double totalSpent;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

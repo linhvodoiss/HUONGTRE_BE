@@ -8,6 +8,8 @@ import com.fpt.repository.*;
 import com.fpt.service.interfaces.IBranchService;
 import com.fpt.service.interfaces.IOrderService;
 import com.fpt.specification.BranchSpecificationBuilder;
+import com.fpt.specification.OptionSpecificationBuilder;
+import com.fpt.specification.OrderSpecificationBuilder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,21 @@ public class OrderService implements IOrderService {
     private final ProductRepository productRepository;
     private final OptionRepository optionRepository;
     private final CustomerRepository customerRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<OrderDTO> getAllOrders(Pageable pageable, String search) {
+
+        OrderSpecificationBuilder specification =
+                new OrderSpecificationBuilder(search);
+
+        Page<Order> orders =
+                orderRepository.findAll(specification.build(), pageable);
+
+        return orders.map(this::mapToResponse);
+    }
+
+
     @Override
     @Transactional
     public OrderDTO createOrder(OrderCreateRequest request) {
@@ -58,7 +75,7 @@ public class OrderService implements IOrderService {
                 .items(new ArrayList<>())
                 .build();
 
-        order = orderRepository.save(order); // ⚠️ BẮT BUỘC SAVE TRƯỚC
+        order = orderRepository.save(order);
 
         int totalAmount = 0;
 
@@ -99,7 +116,7 @@ public class OrderService implements IOrderService {
             }
 
             totalAmount += itemTotal;
-            order.getItems().add(orderItem); // ⚠️ KHÔNG save orderItem
+            order.getItems().add(orderItem);
         }
 
         // =========================

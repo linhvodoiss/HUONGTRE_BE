@@ -30,6 +30,16 @@ public class OrderController {
 
     private final IOrderService service;
 
+        @GetMapping
+    public ResponseEntity<PaginatedResponse<OrderDTO>> getAll(
+            Pageable pageable,
+            @RequestParam(required = false) String search
+    ) {
+        Page<OrderDTO> dtoPage = service.getAllOrders(pageable, search);
+        PaginatedResponse<OrderDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, "Lấy danh sách gói đăng ký thành công");
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping
     public ResponseEntity<SuccessResponse<OrderDTO>> create(
             @RequestBody OrderCreateRequest request

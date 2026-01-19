@@ -1,6 +1,7 @@
 package com.fpt.service.interfaces;
 
 import com.fpt.dto.BranchDTO;
+import com.fpt.dto.OptionDTO;
 import com.fpt.dto.OrderDTO;
 import com.fpt.entity.Branch;
 import com.fpt.form.OrderCreateRequest;
@@ -10,6 +11,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IOrderService {
+    Page<OrderDTO> getAllOrders(Pageable pageable, String search);
+
+
     OrderDTO createOrder(OrderCreateRequest request);
 
     OrderDTO getById(Long orderId);
