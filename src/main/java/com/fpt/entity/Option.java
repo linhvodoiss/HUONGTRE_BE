@@ -1,5 +1,6 @@
 package com.fpt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.*;
 
@@ -9,12 +10,12 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "`option`")
+@Table(name = "`Options`")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE option SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE Options SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Option {
 
@@ -22,8 +23,11 @@ public class Option {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_group_id", nullable = false)
+    @JsonIgnore
     private OptionGroup optionGroup;
 
     @Column(nullable = false)

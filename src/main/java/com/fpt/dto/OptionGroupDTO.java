@@ -25,6 +25,7 @@ public class OptionGroupDTO {
     private Integer displayOrder;
 
     private Boolean isActive;
-
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private List<OptionDTO> options;
 }

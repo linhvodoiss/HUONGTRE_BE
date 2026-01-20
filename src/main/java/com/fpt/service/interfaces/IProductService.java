@@ -4,6 +4,7 @@ import com.fpt.dto.ProductDTO;
 import com.fpt.dto.SubscriptionPackageDTO;
 import com.fpt.entity.Product;
 import com.fpt.entity.SubscriptionPackage;
+import com.fpt.form.ProductCreateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,6 +16,7 @@ public interface IProductService {
     List<ProductDTO> convertToDto(List<Product> data);
     List<ProductDTO> getAll();
     ProductDTO getById(Long id);
+    ProductDTO create(ProductCreateRequest request);
 //    ProductDTO create(ProductDTO dto);
 //    ProductDTO update(Long id, ProductDTO dto);
     void delete(Long id);

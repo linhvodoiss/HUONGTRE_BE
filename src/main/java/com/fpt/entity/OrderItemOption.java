@@ -10,12 +10,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "order_item_option")
+@Table(name = "OrderItemOption")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE order_item_option SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE OrderItemOption SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class OrderItemOption {
 

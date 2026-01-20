@@ -14,6 +14,7 @@ public class OptionDTO {
     private String description;
     private Double price;
     private Boolean isActive;
+    private Integer displayOrder;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

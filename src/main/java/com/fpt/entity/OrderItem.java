@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "order_item")
+@Table(name = "OrderItem")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE order_item SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE OrderItem SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class OrderItem {
 

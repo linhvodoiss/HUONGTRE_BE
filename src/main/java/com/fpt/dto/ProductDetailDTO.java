@@ -18,6 +18,8 @@ public class ProductDetailDTO {
     private Double price;
     private String imageUrl;
     private String description;
-
+    private Boolean isActive;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private List<OptionGroupDTO> optionGroups;
 }

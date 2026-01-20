@@ -1,17 +1,15 @@
 package com.fpt.service.interfaces;
 
 import com.fpt.dto.OptionDTO;
+import com.fpt.form.OptionCreateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface IOptionService {
-    Page<OptionDTO> getAllOptions(Pageable pageable, String search, Boolean isActive);
-    List<OptionDTO> getAll();
-    OptionDTO getById(Long id);
-    OptionDTO create(OptionDTO dto);
-    OptionDTO update(Long id, OptionDTO dto);
+    OptionDTO create(OptionCreateRequest req);
+    OptionDTO update(Long id, OptionCreateRequest request);
     void delete(Long id);
     void deleteMany(List<Long> ids);
 }

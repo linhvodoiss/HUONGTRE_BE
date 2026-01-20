@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "option_group")
+@Table(name = "OptionGroup")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE option_group SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE OptionGroup SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class OptionGroup {
 
@@ -53,6 +53,8 @@ public class OptionGroup {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "optionGroup", fetch = FetchType.LAZY)
     @BatchSize(size = 50)
     private Set<Option> options = new HashSet<>();

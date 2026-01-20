@@ -47,53 +47,24 @@ public class DataSeeder implements CommandLineRunner {
     private void seedUsers() {
         if (userRepository.count() > 0) return;
 
-        userRepository.saveAll(List.of(
-                User.builder()
-                        .userName("admin")
-                        .email("admin@gmail.com")
-                        .password("$2a$10$RAU5Vl1A6Iheyeg2MSBlVeLRLpH2kRSpredJkzJIm72ZscI6pg/62")
-                        .firstName("Nguyen Van")
-                        .lastName("A")
-                        .phoneNumber("0987654321")
-                        .role(Role.ADMIN)
-                        .status(UserStatus.ACTIVE)
-                        .isActive(true)
-                        
+        userRepository.saveAll(List.of(User.builder().userName("admin").email("admin@gmail.com").password("$2a$10$RAU5Vl1A6Iheyeg2MSBlVeLRLpH2kRSpredJkzJIm72ZscI6pg/62").firstName("Nguyen Van").lastName("A").phoneNumber("0987654321").role(Role.ADMIN).status(UserStatus.ACTIVE).isActive(true)
+
                         .build(),
 
-                User.builder()
-                        .userName("CaoVanBay")
-                        .email("Bay@gmail.com")
-                        .password("$2a$10$RAU5Vl1A6Iheyeg2MSBlVeLRLpH2kRSpredJkzJIm72ZscI6pg/62")
-                        .firstName("Cao Van")
-                        .lastName("Bay")
-                        .phoneNumber("0999999999")
-                        .role(Role.CUSTOMER)
-                        .status(UserStatus.ACTIVE)
-                        .isActive(true)
-                        
-                        .build()
-        ));
+                User.builder().userName("CaoVanBay").email("Bay@gmail.com").password("$2a$10$RAU5Vl1A6Iheyeg2MSBlVeLRLpH2kRSpredJkzJIm72ZscI6pg/62").firstName("Cao Van").lastName("Bay").phoneNumber("0999999999").role(Role.CUSTOMER).status(UserStatus.ACTIVE).isActive(true)
+
+                        .build()));
     }
 
     // ================= CATEGORY =================
     private void seedCategories() {
         if (categoryRepository.count() > 0) return;
 
-        categoryRepository.saveAll(List.of(
-                Category.builder()
-                        .name("Trà")
-                        .description("Các loại trà")
-                        .isActive(true)
-                        
-                        .build(),
-                Category.builder()
-                        .name("Nước khác")
-                        .description("Nước uống khác")
-                        .isActive(true)
-                        
-                        .build()
-        ));
+        categoryRepository.saveAll(List.of(Category.builder().name("Trà").description("Các loại trà").isActive(true)
+
+                .build(), Category.builder().name("Nước khác").description("Nước uống khác").isActive(true)
+
+                .build()));
     }
 
     // ================= PRODUCT =================
@@ -103,31 +74,17 @@ public class DataSeeder implements CommandLineRunner {
         Category tea = categoryRepository.findAll().get(0);
         Category other = categoryRepository.findAll().get(1);
 
-        productRepository.saveAll(List.of(
-                Product.builder()
-                        .name("Trà đào")
-                        .price(40000d)
-                        .category(tea)
-                        .isActive(true)
-                        
+        productRepository.saveAll(List.of(Product.builder().name("Trà đào").price(40000d).category(tea).isActive(true)
+
                         .build(),
 
-                Product.builder()
-                        .name("Trà sữa olong")
-                        .price(30000d)
-                        .category(tea)
-                        .isActive(true)
-                        
+                Product.builder().name("Trà sữa olong").price(30000d).category(tea).isActive(true)
+
                         .build(),
 
-                Product.builder()
-                        .name("Nước lọc")
-                        .price(5000d)
-                        .category(other)
-                        .isActive(true)
-                        
-                        .build()
-        ));
+                Product.builder().name("Nước lọc").price(5000d).category(other).isActive(true)
+
+                        .build()));
     }
 
     // ================= OPTION GROUP & OPTION =================
@@ -135,64 +92,25 @@ public class DataSeeder implements CommandLineRunner {
         if (optionGroupRepository.count() > 0) return;
 
         // ICE
-        OptionGroup ice = optionGroupRepository.save(
-                OptionGroup.builder()
-                        .name("Ice")
-                        .selectType(OptionSelectType.SINGLE)
-                        .required(true)
-                        .minSelect(1)
-                        .maxSelect(1)
-                        .displayOrder(1)
-                        .isActive(true)
-                        
-                        .build()
-        );
+        OptionGroup ice = optionGroupRepository.save(OptionGroup.builder().name("Ice").selectType(OptionSelectType.SINGLE).required(true).minSelect(1).maxSelect(1).displayOrder(1).isActive(true)
 
-        optionRepository.saveAll(List.of(
-                Option.builder().optionGroup(ice).name("0%").price(0.0).displayOrder(1).isActive(true).build(),
-                Option.builder().optionGroup(ice).name("50%").price(0.0).displayOrder(1).isActive(true).build(),
-                Option.builder().optionGroup(ice).name("100%").price(0.0).displayOrder(1).isActive(true).build()
-        ));
+                .build());
+
+        optionRepository.saveAll(List.of(Option.builder().optionGroup(ice).name("0%").price(0.0).displayOrder(1).isActive(true).build(), Option.builder().optionGroup(ice).name("50%").price(0.0).displayOrder(1).isActive(true).build(), Option.builder().optionGroup(ice).name("100%").price(0.0).displayOrder(1).isActive(true).build()));
 
         // SUGAR
-        OptionGroup sugar = optionGroupRepository.save(
-                OptionGroup.builder()
-                        .name("Sugar")
-                        .selectType(OptionSelectType.SINGLE)
-                        .required(true)
-                        .minSelect(1)
-                        .maxSelect(1)
-                        .displayOrder(2)
-                        .isActive(true)
-                        
-                        .build()
-        );
+        OptionGroup sugar = optionGroupRepository.save(OptionGroup.builder().name("Sugar").selectType(OptionSelectType.SINGLE).required(true).minSelect(1).maxSelect(1).displayOrder(2).isActive(true)
 
-        optionRepository.saveAll(List.of(
-                Option.builder().optionGroup(sugar).name("0%").price(0.0).isActive(true).build(),
-                Option.builder().optionGroup(sugar).name("50%").price(0.0).isActive(true).build(),
-                Option.builder().optionGroup(sugar).name("100%").price(0.0).isActive(true).build()
-        ));
+                .build());
+
+        optionRepository.saveAll(List.of(Option.builder().optionGroup(sugar).name("0%").price(0.0).isActive(true).build(), Option.builder().optionGroup(sugar).name("50%").price(0.0).isActive(true).build(), Option.builder().optionGroup(sugar).name("100%").price(0.0).isActive(true).build()));
 
         // TOPPING
-        OptionGroup topping = optionGroupRepository.save(
-                OptionGroup.builder()
-                        .name("Topping")
-                        .selectType(OptionSelectType.MULTIPLE)
-                        .required(false)
-                        .minSelect(0)
-                        .maxSelect(3)
-                        .displayOrder(3)
-                        .isActive(true)
-                        
-                        .build()
-        );
+        OptionGroup topping = optionGroupRepository.save(OptionGroup.builder().name("Topping").selectType(OptionSelectType.MULTIPLE).required(false).minSelect(0).maxSelect(3).displayOrder(3).isActive(true)
 
-        optionRepository.saveAll(List.of(
-                Option.builder().optionGroup(topping).name("Trân châu").price(5000.0).isActive(true).build(),
-                Option.builder().optionGroup(topping).name("Pudding").price(7000.0).isActive(true).build(),
-                Option.builder().optionGroup(topping).name("Thạch").price(3000.0).isActive(true).build()
-        ));
+                .build());
+
+        optionRepository.saveAll(List.of(Option.builder().optionGroup(topping).name("Trân châu").price(5000.0).isActive(true).build(), Option.builder().optionGroup(topping).name("Pudding").price(7000.0).isActive(true).build(), Option.builder().optionGroup(topping).name("Thạch").price(3000.0).isActive(true).build()));
     }
 
     // ================= PRODUCT OPTION GROUP =================
@@ -200,17 +118,12 @@ public class DataSeeder implements CommandLineRunner {
         if (productOptionGroupRepository.count() > 0) return;
 
         Map<String, OptionGroup> groupMap = new HashMap<>();
-        optionGroupRepository.findAll()
-                .forEach(g -> groupMap.put(g.getName(), g));
+        optionGroupRepository.findAll().forEach(g -> groupMap.put(g.getName(), g));
 
         for (Product product : productRepository.findAll()) {
             if (product.getName().equalsIgnoreCase("Nước lọc")) continue;
 
-            productOptionGroupRepository.saveAll(List.of(
-                    ProductOptionGroup.builder().product(product).optionGroup(groupMap.get("Ice")).build(),
-                    ProductOptionGroup.builder().product(product).optionGroup(groupMap.get("Sugar")).build(),
-                    ProductOptionGroup.builder().product(product).optionGroup(groupMap.get("Topping")).build()
-            ));
+            productOptionGroupRepository.saveAll(List.of(ProductOptionGroup.builder().product(product).optionGroup(groupMap.get("Ice")).build(), ProductOptionGroup.builder().product(product).optionGroup(groupMap.get("Sugar")).build(), ProductOptionGroup.builder().product(product).optionGroup(groupMap.get("Topping")).build()));
         }
     }
 
@@ -218,10 +131,7 @@ public class DataSeeder implements CommandLineRunner {
     private void seedBranches() {
         if (branchRepository.count() > 0) return;
 
-        branchRepository.saveAll(List.of(
-                Branch.builder().name("Branch A").isActive(true).build(),
-                Branch.builder().name("Branch B").isActive(true).build()
-        ));
+        branchRepository.saveAll(List.of(Branch.builder().name("Branch A").isActive(true).build(), Branch.builder().name("Branch B").isActive(true).build()));
     }
 
     private void seedBranchProducts() {
@@ -229,14 +139,9 @@ public class DataSeeder implements CommandLineRunner {
 
         for (Branch branch : branchRepository.findAll()) {
             for (Product product : productRepository.findAll()) {
-                branchProductRepository.save(
-                        BranchProduct.builder()
-                                .branch(branch)
-                                .product(product)
-                                .isAvailable(true)
-                                
-                                .build()
-                );
+                branchProductRepository.save(BranchProduct.builder().branch(branch).product(product).isAvailable(true)
+
+                        .build());
             }
         }
     }
@@ -245,18 +150,15 @@ public class DataSeeder implements CommandLineRunner {
     private void seedSubscriptionPackages() {
         if (subscriptionPackageRepository.count() > 0) return;
         for (SubscriptionPackage.BillingCycle cycle : SubscriptionPackage.BillingCycle.values()) {
-            subscriptionPackageRepository.save(
-                    SubscriptionPackage.builder()
-                            .name("Runtime Package")
-                            .billingCycle(cycle)
-                            .price(2000f)
-                            .isActive(true)
-                            
-                            .build()
-            );
+            subscriptionPackageRepository.save(SubscriptionPackage.builder().name("Runtime Package").billingCycle(cycle).price(2000f).isActive(true)
+
+                    .build());
         }
     }
 
-    private void seedPaymentOrders() {}
-    private void seedLicenses() {}
+    private void seedPaymentOrders() {
+    }
+
+    private void seedLicenses() {
+    }
 }

@@ -2,6 +2,10 @@ package com.fpt.service.implementations;
 
 import com.fpt.dto.OptionDTO;
 import com.fpt.entity.Option;
+import com.fpt.entity.OptionGroup;
+import com.fpt.entity.SubscriptionPackage;
+import com.fpt.form.OptionCreateRequest;
+import com.fpt.repository.OptionGroupRepository;
 import com.fpt.repository.OptionRepository;
 import com.fpt.service.interfaces.IOptionService;
 import com.fpt.specification.OptionSpecificationBuilder;
@@ -11,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,42 +24,43 @@ import java.util.stream.Collectors;
 public class OptionService implements IOptionService {
 
     private final OptionRepository optionRepository;
-    @Override
-    public Page<OptionDTO> getAllOptions(Pageable pageable, String search, Boolean isActive) {
-        OptionSpecificationBuilder specification = new OptionSpecificationBuilder(search,isActive);
-        return optionRepository.findAll(specification.build(), pageable)
-                .map(this::toDto);
-    }
-    @Override
-    public List<OptionDTO> getAll() {
-        return optionRepository.findAll().stream()
-                .filter(Option::getIsActive)
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
+    private final OptionGroupRepository optionGroupRepository;
 
     @Override
-    public OptionDTO getById(Long id) {
-        Option option = optionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Option not found with id: " + id));
+    @Transactional
+    public OptionDTO create(OptionCreateRequest req) {
+
+        OptionGroup group = optionGroupRepository.findById(req.getOptionGroupId())
+                .orElseThrow(() -> new RuntimeException("OptionGroup not found"));
+
+        Option option = optionRepository.save(
+                Option.builder()
+                        .optionGroup(group)
+                        .name(req.getName())
+                        .price(req.getPrice())
+                        .displayOrder(req.getDisplayOrder())
+                        .isActive(true)
+                        .isDeleted(false)
+                        .build()
+        );
         return toDto(option);
     }
 
     @Override
-    public OptionDTO create(OptionDTO dto) {
-        Option option = new Option();
-        option.setName(dto.getName());
-        return toDto(optionRepository.save(option));
+    @Transactional
+    public OptionDTO update(Long id, OptionCreateRequest request) {
+
+        Option option = optionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Option not found"));
+
+        option.setName(request.getName());
+        option.setPrice(request.getPrice());
+        option.setDisplayOrder(request.getDisplayOrder());
+        option.setIsActive(request.getIsActive());
+
+        return toDto(option);
     }
 
-    @Override
-    public OptionDTO update(Long id, OptionDTO dto) {
-        Option option = optionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Option not found with id: " + id));
-        option.setName(dto.getName());
-        option.setIsActive(dto.getIsActive());
-        return toDto(optionRepository.save(option));
-    }
 
     @Override
     public void delete(Long id) {
@@ -76,7 +82,9 @@ public class OptionService implements IOptionService {
         return OptionDTO.builder()
                 .id(option.getId())
                 .name(option.getName())
+                .price(option.getPrice())
                 .isActive(option.getIsActive())
+                .displayOrder(option.getDisplayOrder())
                 .createdAt(option.getCreatedAt())
                 .updatedAt(option.getUpdatedAt())
                 .build();

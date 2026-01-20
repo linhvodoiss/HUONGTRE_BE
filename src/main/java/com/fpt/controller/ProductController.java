@@ -3,6 +3,7 @@ package com.fpt.controller;
 import com.fpt.dto.ProductDTO;
 import com.fpt.dto.SubscriptionPackageDTO;
 import com.fpt.entity.SubscriptionPackage;
+import com.fpt.form.ProductCreateRequest;
 import com.fpt.payload.PaginatedResponse;
 import com.fpt.payload.SuccessNoResponse;
 import com.fpt.payload.SuccessResponse;
@@ -67,26 +68,19 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-//    @PostMapping
-//    public ResponseEntity<SuccessResponse<SubscriptionPackageDTO>> create(@RequestBody SubscriptionPackageDTO dto) {
-//        try {
-//            SubscriptionPackageDTO saved = service.create(dto);
-//            return ResponseEntity.ok(new SuccessResponse<>(200, "Create successfully!", saved));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body(new SuccessResponse<>(500, "Create failed!", null));
-//        }
-//    }
-//
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<SuccessResponse<SubscriptionPackageDTO>> update(@PathVariable Long id, @RequestBody SubscriptionPackageDTO dto) {
-//        try {
-//            SubscriptionPackageDTO updated = service.update(id, dto);
-//            return ResponseEntity.ok(new SuccessResponse<>(200, "Update successfully!", updated));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body(new SuccessResponse<>(500, "Update failed!", null));
-//        }
-//    }
+    @PostMapping
+    public ResponseEntity<SuccessResponse<ProductDTO>> createProduct(
+            @RequestBody ProductCreateRequest request
+    ) {
+        ProductDTO dto = service.create(request);
+        SuccessResponse<ProductDTO> response = new SuccessResponse<>(
+                HttpServletResponse.SC_OK,
+                "Thêm mới sản phầm thành công!",
+                dto
+        );
+
+        return ResponseEntity.ok(response);
+    }
 
 
     @DeleteMapping("/{id}")

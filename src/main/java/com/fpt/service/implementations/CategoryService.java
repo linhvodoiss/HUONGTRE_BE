@@ -1,4 +1,5 @@
 package com.fpt.service.implementations;
+
 import com.fpt.dto.*;
 import com.fpt.entity.*;
 import com.fpt.repository.CategoryRepository;
@@ -30,15 +31,17 @@ public class CategoryService implements ICategoryService {
     private final OptionRepository optionRepository;
     @Autowired
     private ModelMapper modelMapper;
+
     @Override
     public Page<CategoryDTO> getAllCategory(Pageable pageable, String search, Boolean isActive) {
-        CategorySpecificationBuilder specification = new CategorySpecificationBuilder(search,isActive);
+        CategorySpecificationBuilder specification = new CategorySpecificationBuilder(search, isActive);
         return repository.findAll(specification.build(), pageable)
                 .map(this::toDto);
     }
+
     @Override
-    public Page<CategoryDTO> getAllCategoryCustomer( Pageable pageable, String search) {
-        CategorySpecificationBuilder specification = new CategorySpecificationBuilder(search,true);
+    public Page<CategoryDTO> getAllCategoryCustomer(Pageable pageable, String search) {
+        CategorySpecificationBuilder specification = new CategorySpecificationBuilder(search, true);
         return repository.findAll(specification.build(), pageable)
                 .map(this::toDto);
     }
@@ -109,7 +112,8 @@ public class CategoryService implements ICategoryService {
                 .map(this::mapCategoryToMenuDTO)
                 .toList();
     }
-    ////////////////////////////////Response menu///////////////////////////////
+
+    /// /////////////////////////////Response menu///////////////////////////////
     private CategoryMenuDTO mapCategoryToMenuDTO(Category category) {
 
         List<Product> products =
@@ -127,7 +131,6 @@ public class CategoryService implements ICategoryService {
                 .products(productDTOs)
                 .build();
     }
-
 
 
     private ProductDetailDTO mapProductToDetailDTO(Product product) {
@@ -160,6 +163,9 @@ public class CategoryService implements ICategoryService {
                         .minSelect(og.getMinSelect())
                         .maxSelect(og.getMaxSelect())
                         .displayOrder(og.getDisplayOrder())
+                        .isActive(og.getIsActive())
+                        .createdAt(og.getCreatedAt())
+                        .updatedAt(og.getUpdatedAt())
                         .options(optionMap.getOrDefault(og.getId(), List.of()))
                         .build())
                 .toList();
@@ -170,6 +176,9 @@ public class CategoryService implements ICategoryService {
                 .price(product.getPrice())
                 .imageUrl(product.getImageUrl())
                 .description(product.getDescription())
+                .isActive(product.getIsActive())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
                 .optionGroups(ogDTOs)
                 .build();
     }
@@ -180,13 +189,25 @@ public class CategoryService implements ICategoryService {
                 .name(option.getName())
                 .description(option.getDescription())
                 .price(option.getPrice())
+                .displayOrder(option.getDisplayOrder())
+                .isActive(option.getIsActive())
+                .createdAt(option.getCreatedAt())
+                .updatedAt(option.getUpdatedAt())
                 .build();
     }
 
 
-////////////////////////////////Response base category///////////////////////////////
+    /// /////////////////////////////Response base category///////////////////////////////
     private CategoryDTO toDto(Category category) {
-        return modelMapper.map(category, CategoryDTO.class);
+        return CategoryDTO.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .description(category.getDescription())
+                .imageUrl(category.getImageUrl())
+                .isActive(category.getIsActive())
+                .createdAt(category.getCreatedAt())
+                .updatedAt(category.getUpdatedAt())
+                .build();
     }
 
 
