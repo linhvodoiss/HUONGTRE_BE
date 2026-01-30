@@ -38,7 +38,7 @@ public class OrderItem {
 
     @Column(name = "base_price", nullable = false)
     private Double basePrice;
-
+    private String note;
     @OneToMany(
             mappedBy = "orderItem",
             cascade = CascadeType.ALL,

@@ -92,6 +92,7 @@ public class OrderService implements IOrderService {
                     .product(product)
                     .quantity(itemReq.getQuantity())
                     .basePrice(product.getPrice())
+                    .note(itemReq.getNote())
                     .options(new ArrayList<>())
                     .build();
 
@@ -178,6 +179,7 @@ public class OrderService implements IOrderService {
                                         .productName(item.getProduct().getName())
                                         .quantity(item.getQuantity())
                                         .basePrice(item.getBasePrice())
+                                        .note(item.getNote())
                                         .options(
                                                 item.getOptions().stream().map(opt ->
                                                         OrderItemOptionDTO.builder()

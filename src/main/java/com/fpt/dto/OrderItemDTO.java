@@ -16,5 +16,6 @@ public class OrderItemDTO {
     private String productName;
     private Integer quantity;
     private Double basePrice;
+    private String note;
     private List<OrderItemOptionDTO> options;
 }
