@@ -1,13 +1,13 @@
 package com.fpt.specification;
 
-import com.fpt.entity.Branch;
-import com.fpt.entity.Category;
-import org.springframework.data.jpa.domain.Specification;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import com.fpt.entity.Branch;
 
 public class BranchSpecification implements Specification<Branch> {
 
@@ -22,7 +22,8 @@ public class BranchSpecification implements Specification<Branch> {
 	public Predicate toPredicate(Root<Branch> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
 		if (criteria.getOperator().equalsIgnoreCase("Like")) {
-			return cb.like(cb.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
+			return cb.like(cb.lower(root.get(criteria.getKey())),
+					"%" + criteria.getValue().toString().toLowerCase() + "%");
 		}
 
 		if (criteria.getOperator().equalsIgnoreCase(">=")) {

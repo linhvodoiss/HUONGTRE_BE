@@ -4,24 +4,25 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import com.fpt.service.interfaces.IFileService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fpt.service.interfaces.IFileService;
 import com.fpt.utils.FileManager;
 
 @Service
 public class FileService implements IFileService {
 
-    private FileManager fileManager = new FileManager();
-    //	private String linkFolder = "C:\\Users\\pc\\Desktop\\Avatar";
-//    private String linkFolder = "C:\\Users\\Admin QT\\Desktop\\source fe\\SOURCE_FE_VTI\\src\\assets";
+	private FileManager fileManager = new FileManager();
+	// private String linkFolder = "C:\\Users\\pc\\Desktop\\Avatar";
+	// private String linkFolder = "C:\\Users\\Admin QT\\Desktop\\source
+	// fe\\SOURCE_FE_VTI\\src\\assets";
 
 	private final String UPLOAD_DIR = System.getProperty("user.dir") + File.separator + "uploads";
 
 	@Override
 	public String uploadImage(MultipartFile file) throws IOException {
-//		2 MB
+		// 2 MB
 		final long MAX_SIZE = 2 * 1024 * 1024;
 		// type file is accepted
 		final String[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
@@ -70,7 +71,8 @@ public class FileService implements IFileService {
 
 	@Override
 	public void deleteImage(String fileName) {
-		if (fileName == null || fileName.isEmpty()) return;
+		if (fileName == null || fileName.isEmpty())
+			return;
 
 		if (fileName.startsWith("/uploads/")) {
 			fileName = fileName.replace("/uploads/", "");

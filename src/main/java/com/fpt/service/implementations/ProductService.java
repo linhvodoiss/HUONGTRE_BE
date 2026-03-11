@@ -1,15 +1,8 @@
 package com.fpt.service.implementations;
 
-import com.fpt.dto.*;
-import com.fpt.entity.*;
-import com.fpt.form.OptionCreateRequest;
-import com.fpt.form.ProductCreateRequest;
-import com.fpt.repository.*;
-import com.fpt.service.interfaces.IProductService;
-import com.fpt.service.interfaces.ISubscriptionPackageService;
-import com.fpt.specification.ProductSpecificationBuilder;
-import com.fpt.specification.SubscriptionPackageSpecificationBuilder;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,9 +10,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.fpt.dto.CategoryDTO;
+import com.fpt.dto.ProductDTO;
+import com.fpt.entity.Category;
+import com.fpt.entity.OptionGroup;
+import com.fpt.entity.Product;
+import com.fpt.entity.ProductOptionGroup;
+import com.fpt.form.ProductCreateRequest;
+import com.fpt.repository.CategoryRepository;
+import com.fpt.repository.OptionGroupRepository;
+import com.fpt.repository.OptionRepository;
+import com.fpt.repository.ProductOptionGroupRepository;
+import com.fpt.repository.ProductRepository;
+import com.fpt.service.interfaces.IProductService;
+import com.fpt.specification.ProductSpecificationBuilder;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -32,17 +38,18 @@ public class ProductService implements IProductService {
     private final OptionGroupRepository optionGroupRepository;
     private final ProductOptionGroupRepository productOptionGroupRepository;
     @Autowired
-private ModelMapper modelMapper;
+    private ModelMapper modelMapper;
+
     @Override
     public Page<ProductDTO> getAllProduct(Pageable pageable, String search, Boolean isActive) {
-        ProductSpecificationBuilder specification = new ProductSpecificationBuilder(search,isActive);
+        ProductSpecificationBuilder specification = new ProductSpecificationBuilder(search, isActive);
         return repository.findAll(specification.build(), pageable)
                 .map(this::toDto);
     }
 
     @Override
-    public Page<ProductDTO> getAllProductCustomer( Pageable pageable, String search) {
-        ProductSpecificationBuilder specification = new ProductSpecificationBuilder(search,true);
+    public Page<ProductDTO> getAllProductCustomer(Pageable pageable, String search) {
+        ProductSpecificationBuilder specification = new ProductSpecificationBuilder(search, true);
         return repository.findAll(specification.build(), pageable)
                 .map(this::toDto);
     }
@@ -71,14 +78,12 @@ private ModelMapper modelMapper;
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
-
     @Override
     public void delete(Long id) {
         Product product = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         repository.delete(product);
     }
-
 
     @Override
     public void deleteMore(List<Long> ids) {
@@ -115,8 +120,7 @@ private ModelMapper modelMapper;
                         ProductOptionGroup.builder()
                                 .product(product)
                                 .optionGroup(group)
-                                .build()
-                );
+                                .build());
             }
         }
 
@@ -159,7 +163,6 @@ private ModelMapper modelMapper;
                     .build();
         }
 
-
         return ProductDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())
@@ -174,6 +177,5 @@ private ModelMapper modelMapper;
                 .updatedAt(entity.getUpdatedAt())
                 .build();
     }
-
 
 }

@@ -21,9 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fpt.service.interfaces.IFileService;
 import com.fpt.utils.FileManager;
 
+import com.fpt.constant.ApiPaths;
+import com.fpt.constant.ResponseMessage;
+
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value = "/api/v1/files")
+@RequestMapping(ApiPaths.FILES)
 @Validated
 public class FileController {
 
@@ -52,7 +55,7 @@ public class FileController {
 		Map<String, String> data = new HashMap<>();
 		data.put("avatarUrl", avatarFullUrl);
 
-		return ResponseEntity.ok(new SuccessResponse<>(200, "Update avatar successfully", data));
+		return ResponseEntity.ok(new SuccessResponse<>(200, ResponseMessage.UPDATE_AVATAR_SUCCESS, data));
 	}
 
 

@@ -21,9 +21,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
 
+import com.fpt.constant.ApiPaths;
+import com.fpt.constant.ResponseMessage;
+
 @RestController
 @Validated
-@RequestMapping("/api/v1/payment")
+@RequestMapping(ApiPaths.PAYMENT)
 public class PayOSController {
     private static final Logger LOGGER = Logger.getLogger(PayOSController.class.getName());
     @Value("${payos.checksum-key}")
@@ -62,7 +65,7 @@ public class PayOSController {
 
         SuccessResponse<PayOSDTO> response = new SuccessResponse<>(
                 200,
-                "Create link payment successfully.",
+                ResponseMessage.CREATE_PAYMENT_LINK_SUCCESS,
                 payOSDTO
         );
 
@@ -183,7 +186,7 @@ public class PayOSController {
             String canceledAt = (String) cancelData.get("canceledAt");
             paymentOrderService.addReasonCancel(paymentLinkId,cancellationReason,canceledAt);
             return ResponseEntity.ok(
-                    new SuccessResponse<>(200, "Cancel order successfully", cancelData)
+                    new SuccessResponse<>(200, ResponseMessage.CANCEL_ORDER_SUCCESS, cancelData)
             );
         } catch (Exception e) {
             LOGGER.severe("❌ Lỗi huỷ đơn hàng: " + e.getMessage());
@@ -202,7 +205,7 @@ public class PayOSController {
             String canceledAt = LocalDateTime.now().format(formatter);
             paymentOrderService.addReasonCancel(paymentLinkId,cancellationReason,canceledAt);
             return ResponseEntity.ok(
-                    new SuccessResponse<>(200, "Cancel order successfully", null)
+                    new SuccessResponse<>(200, ResponseMessage.CANCEL_ORDER_SUCCESS, null)
             );
         } catch (Exception e) {
             LOGGER.severe("❌ Lỗi huỷ đơn hàng: " + e.getMessage());
@@ -219,7 +222,7 @@ public class PayOSController {
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> dataPayment = (Map<String, Object>) info.get("data");
             response.put("code", 200);
-            response.put("message", "Take payment successfully");
+            response.put("message", ResponseMessage.TAKE_PAYMENT_SUCCESS);
             response.put("data", dataPayment);
             return ResponseEntity.ok(response);
         } catch (Exception e) {

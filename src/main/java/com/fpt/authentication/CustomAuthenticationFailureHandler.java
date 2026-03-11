@@ -1,15 +1,16 @@
 package com.fpt.authentication;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
@@ -17,8 +18,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        AuthenticationException exception) throws IOException {
+            HttpServletResponse response,
+            AuthenticationException exception) throws IOException {
 
         int status = HttpServletResponse.SC_UNAUTHORIZED;
         String message = "Username and password is incorrect.";

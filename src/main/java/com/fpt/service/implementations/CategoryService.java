@@ -1,14 +1,9 @@
 package com.fpt.service.implementations;
 
-import com.fpt.dto.*;
-import com.fpt.entity.*;
-import com.fpt.repository.CategoryRepository;
-import com.fpt.repository.OptionRepository;
-import com.fpt.repository.ProductRepository;
-import com.fpt.service.interfaces.ICategoryService;
-import com.fpt.specification.CategorySpecificationBuilder;
-import com.fpt.specification.ProductSpecificationBuilder;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,200 +11,204 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.fpt.dto.CategoryDTO;
+import com.fpt.dto.CategoryMenuDTO;
+import com.fpt.dto.OptionDTO;
+import com.fpt.dto.OptionGroupDTO;
+import com.fpt.dto.ProductDetailDTO;
+import com.fpt.entity.Category;
+import com.fpt.entity.Option;
+import com.fpt.entity.OptionGroup;
+import com.fpt.entity.Product;
+import com.fpt.entity.ProductOptionGroup;
+import com.fpt.repository.CategoryRepository;
+import com.fpt.repository.OptionRepository;
+import com.fpt.repository.ProductRepository;
+import com.fpt.service.interfaces.ICategoryService;
+import com.fpt.specification.CategorySpecificationBuilder;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class CategoryService implements ICategoryService {
-    private final CategoryRepository repository;
-    private final ProductRepository productRepository;
-    private final OptionRepository optionRepository;
-    @Autowired
-    private ModelMapper modelMapper;
+        private final CategoryRepository repository;
+        private final ProductRepository productRepository;
+        private final OptionRepository optionRepository;
+        @Autowired
+        private ModelMapper modelMapper;
 
-    @Override
-    public Page<CategoryDTO> getAllCategory(Pageable pageable, String search, Boolean isActive) {
-        CategorySpecificationBuilder specification = new CategorySpecificationBuilder(search, isActive);
-        return repository.findAll(specification.build(), pageable)
-                .map(this::toDto);
-    }
-
-    @Override
-    public Page<CategoryDTO> getAllCategoryCustomer(Pageable pageable, String search) {
-        CategorySpecificationBuilder specification = new CategorySpecificationBuilder(search, true);
-        return repository.findAll(specification.build(), pageable)
-                .map(this::toDto);
-    }
-
-    @Override
-    public List<CategoryDTO> convertToDto(List<Category> data) {
-        return List.of();
-    }
-
-    @Override
-    public List<CategoryDTO> getAll() {
-        return repository.findAll().stream()
-                .map(this::toDto)
-                .toList();
-    }
-
-    @Override
-    public CategoryDTO getById(Long id) {
-        return repository.findById(id)
-                .map(this::toDto)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-    }
-
-    @Override
-    public CategoryDTO create(CategoryDTO dto) {
-        Category category = modelMapper.map(dto, Category.class);
-
-        if (category.getIsActive() == null) {
-            category.setIsActive(true);
+        @Override
+        public Page<CategoryDTO> getAllCategory(Pageable pageable, String search, Boolean isActive) {
+                CategorySpecificationBuilder specification = new CategorySpecificationBuilder(search, isActive);
+                return repository.findAll(specification.build(), pageable)
+                                .map(this::toDto);
         }
-        category.setId(null);
-        Category savedCategory = repository.save(category);
-        return toDto(savedCategory);
-    }
 
-    @Override
-    public CategoryDTO update(Long id, CategoryDTO dto) {
-        Category existingCategory = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        modelMapper.map(dto, existingCategory);
-        existingCategory.setId(id);
-        Category updatedCategory = repository.save(existingCategory);
-        return toDto(updatedCategory);
-    }
+        @Override
+        public Page<CategoryDTO> getAllCategoryCustomer(Pageable pageable, String search) {
+                CategorySpecificationBuilder specification = new CategorySpecificationBuilder(search, true);
+                return repository.findAll(specification.build(), pageable)
+                                .map(this::toDto);
+        }
 
-    @Override
-    public void delete(Long id) {
-        Category category = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        repository.delete(category);
-    }
+        @Override
+        public List<CategoryDTO> convertToDto(List<Category> data) {
+                return List.of();
+        }
 
+        @Override
+        public List<CategoryDTO> getAll() {
+                return repository.findAll().stream()
+                                .map(this::toDto)
+                                .toList();
+        }
 
-    @Override
-    public void deleteMore(List<Long> ids) {
-        List<Category> categories = repository.findAllById(ids);
-        repository.deleteAll(categories);
-    }
+        @Override
+        public CategoryDTO getById(Long id) {
+                return repository.findById(id)
+                                .map(this::toDto)
+                                .orElseThrow(() -> new RuntimeException("Category not found"));
+        }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<CategoryMenuDTO> getFullMenu() {
+        @Override
+        public CategoryDTO create(CategoryDTO dto) {
+                Category category = modelMapper.map(dto, Category.class);
 
-        List<Category> categories =
-                repository.findByIsActiveTrueOrderByIdAsc();
+                if (category.getIsActive() == null) {
+                        category.setIsActive(true);
+                }
+                category.setId(null);
+                Category savedCategory = repository.save(category);
+                return toDto(savedCategory);
+        }
 
-        return categories.stream()
-                .map(this::mapCategoryToMenuDTO)
-                .toList();
-    }
+        @Override
+        public CategoryDTO update(Long id, CategoryDTO dto) {
+                Category existingCategory = repository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Category not found"));
+                modelMapper.map(dto, existingCategory);
+                existingCategory.setId(id);
+                Category updatedCategory = repository.save(existingCategory);
+                return toDto(updatedCategory);
+        }
 
-    /// /////////////////////////////Response menu///////////////////////////////
-    private CategoryMenuDTO mapCategoryToMenuDTO(Category category) {
+        @Override
+        public void delete(Long id) {
+                Category category = repository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Category not found"));
+                repository.delete(category);
+        }
 
-        List<Product> products =
-                productRepository.findMenuProductsByCategory(category.getId());
+        @Override
+        public void deleteMore(List<Long> ids) {
+                List<Category> categories = repository.findAllById(ids);
+                repository.deleteAll(categories);
+        }
 
-        List<ProductDetailDTO> productDTOs = products.stream()
-                .map(this::mapProductToDetailDTO)
-                .toList();
+        @Override
+        @Transactional(readOnly = true)
+        public List<CategoryMenuDTO> getFullMenu() {
 
-        return CategoryMenuDTO.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .description(category.getDescription())
-                .imageUrl(category.getImageUrl())
-                .products(productDTOs)
-                .build();
-    }
+                List<Category> categories = repository.findByIsActiveTrueOrderByIdAsc();
 
+                return categories.stream()
+                                .map(this::mapCategoryToMenuDTO)
+                                .toList();
+        }
 
-    private ProductDetailDTO mapProductToDetailDTO(Product product) {
+        /// /////////////////////////////Response menu///////////////////////////////
+        private CategoryMenuDTO mapCategoryToMenuDTO(Category category) {
 
-        List<ProductOptionGroup> pogs = product.getProductOptionGroups();
+                List<Product> products = productRepository.findMenuProductsByCategory(category.getId());
 
-        List<OptionGroup> optionGroups = pogs.stream()
-                .map(ProductOptionGroup::getOptionGroup)
-                .toList();
+                List<ProductDetailDTO> productDTOs = products.stream()
+                                .map(this::mapProductToDetailDTO)
+                                .toList();
 
-        List<Long> optionGroupIds = optionGroups.stream()
-                .map(OptionGroup::getId)
-                .toList();
+                return CategoryMenuDTO.builder()
+                                .id(category.getId())
+                                .name(category.getName())
+                                .description(category.getDescription())
+                                .imageUrl(category.getImageUrl())
+                                .products(productDTOs)
+                                .build();
+        }
 
-        List<Option> options = optionRepository.findActiveByOptionGroupIds(optionGroupIds);
+        private ProductDetailDTO mapProductToDetailDTO(Product product) {
 
-        Map<Long, List<OptionDTO>> optionMap =
-                options.stream()
-                        .collect(Collectors.groupingBy(
-                                o -> o.getOptionGroup().getId(),
-                                Collectors.mapping(this::toOptionDTO, Collectors.toList())
-                        ));
+                List<ProductOptionGroup> pogs = product.getProductOptionGroups();
 
-        List<OptionGroupDTO> ogDTOs = optionGroups.stream()
-                .map(og -> OptionGroupDTO.builder()
-                        .id(og.getId())
-                        .name(og.getName())
-                        .selectType(og.getSelectType())
-                        .required(og.getRequired())
-                        .minSelect(og.getMinSelect())
-                        .maxSelect(og.getMaxSelect())
-                        .displayOrder(og.getDisplayOrder())
-                        .isActive(og.getIsActive())
-                        .createdAt(og.getCreatedAt())
-                        .updatedAt(og.getUpdatedAt())
-                        .options(optionMap.getOrDefault(og.getId(), List.of()))
-                        .build())
-                .toList();
+                List<OptionGroup> optionGroups = pogs.stream()
+                                .map(ProductOptionGroup::getOptionGroup)
+                                .toList();
 
-        return ProductDetailDTO.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .price(product.getPrice())
-                .imageUrl(product.getImageUrl())
-                .description(product.getDescription())
-                .isActive(product.getIsActive())
-                .createdAt(product.getCreatedAt())
-                .updatedAt(product.getUpdatedAt())
-                .optionGroups(ogDTOs)
-                .build();
-    }
+                List<Long> optionGroupIds = optionGroups.stream()
+                                .map(OptionGroup::getId)
+                                .toList();
 
-    private OptionDTO toOptionDTO(Option option) {
-        return OptionDTO.builder()
-                .id(option.getId())
-                .name(option.getName())
-                .description(option.getDescription())
-                .price(option.getPrice())
-                .displayOrder(option.getDisplayOrder())
-                .isActive(option.getIsActive())
-                .createdAt(option.getCreatedAt())
-                .updatedAt(option.getUpdatedAt())
-                .build();
-    }
+                List<Option> options = optionRepository.findActiveByOptionGroupIds(optionGroupIds);
 
+                Map<Long, List<OptionDTO>> optionMap = options.stream()
+                                .collect(Collectors.groupingBy(
+                                                o -> o.getOptionGroup().getId(),
+                                                Collectors.mapping(this::toOptionDTO, Collectors.toList())));
 
-    /// /////////////////////////////Response base category///////////////////////////////
-    private CategoryDTO toDto(Category category) {
-        return CategoryDTO.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .description(category.getDescription())
-                .imageUrl(category.getImageUrl())
-                .isActive(category.getIsActive())
-                .createdAt(category.getCreatedAt())
-                .updatedAt(category.getUpdatedAt())
-                .build();
-    }
+                List<OptionGroupDTO> ogDTOs = optionGroups.stream()
+                                .map(og -> OptionGroupDTO.builder()
+                                                .id(og.getId())
+                                                .name(og.getName())
+                                                .selectType(og.getSelectType())
+                                                .required(og.getRequired())
+                                                .minSelect(og.getMinSelect())
+                                                .maxSelect(og.getMaxSelect())
+                                                .displayOrder(og.getDisplayOrder())
+                                                .isActive(og.getIsActive())
+                                                .createdAt(og.getCreatedAt())
+                                                .updatedAt(og.getUpdatedAt())
+                                                .options(optionMap.getOrDefault(og.getId(), List.of()))
+                                                .build())
+                                .toList();
 
+                return ProductDetailDTO.builder()
+                                .id(product.getId())
+                                .name(product.getName())
+                                .price(product.getPrice())
+                                .imageUrl(product.getImageUrl())
+                                .description(product.getDescription())
+                                .isActive(product.getIsActive())
+                                .createdAt(product.getCreatedAt())
+                                .updatedAt(product.getUpdatedAt())
+                                .optionGroups(ogDTOs)
+                                .build();
+        }
+
+        private OptionDTO toOptionDTO(Option option) {
+                return OptionDTO.builder()
+                                .id(option.getId())
+                                .name(option.getName())
+                                .description(option.getDescription())
+                                .price(option.getPrice())
+                                .displayOrder(option.getDisplayOrder())
+                                .isActive(option.getIsActive())
+                                .createdAt(option.getCreatedAt())
+                                .updatedAt(option.getUpdatedAt())
+                                .build();
+        }
+
+        /// /////////////////////////////Response base
+        /// category///////////////////////////////
+        private CategoryDTO toDto(Category category) {
+                return CategoryDTO.builder()
+                                .id(category.getId())
+                                .name(category.getName())
+                                .description(category.getDescription())
+                                .imageUrl(category.getImageUrl())
+                                .isActive(category.getIsActive())
+                                .createdAt(category.getCreatedAt())
+                                .updatedAt(category.getUpdatedAt())
+                                .build();
+        }
 
 }
-

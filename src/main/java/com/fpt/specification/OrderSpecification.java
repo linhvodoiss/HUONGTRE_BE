@@ -1,13 +1,13 @@
 package com.fpt.specification;
 
-import com.fpt.entity.Option;
-import com.fpt.entity.Order;
-import org.springframework.data.jpa.domain.Specification;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import com.fpt.entity.Order;
 
 public class OrderSpecification implements Specification<Order> {
 
@@ -23,7 +23,8 @@ public class OrderSpecification implements Specification<Order> {
 
 		if (criteria.getOperator().equalsIgnoreCase("Like")) {
 			// lowercase and uppercase
-			return cb.like(cb.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
+			return cb.like(cb.lower(root.get(criteria.getKey())),
+					"%" + criteria.getValue().toString().toLowerCase() + "%");
 		}
 
 		if (criteria.getOperator().equalsIgnoreCase("Equal")) {

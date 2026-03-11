@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import com.fpt.constant.ApiPaths;
+import com.fpt.constant.ResponseMessage;
+
 @RestController
-@RequestMapping("/api/v1/branches")
+@RequestMapping(ApiPaths.BRANCHES)
 @RequiredArgsConstructor
 @Validated
 public class BranchController {
@@ -38,7 +41,7 @@ public class BranchController {
 
     ) {
         Page<BranchDTO> dtoPage = service.getAllBranch(pageable, search,isActive);
-        PaginatedResponse<BranchDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, "Lấy danh sách chi nhánh thành công");
+        PaginatedResponse<BranchDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, ResponseMessage.GET_LIST_BRANCH_SUCCESS);
         return ResponseEntity.ok(response);
     }
 
@@ -48,7 +51,7 @@ public class BranchController {
             @RequestParam(required = false) String search
     ) {
         Page<BranchDTO> dtoPage = service.getAllBranchCustomer(pageable, search);
-        PaginatedResponse<BranchDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, "Lấy danh sách chi nhánh thành công");
+        PaginatedResponse<BranchDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, ResponseMessage.GET_LIST_BRANCH_SUCCESS);
         return ResponseEntity.ok(response);
     }
 
@@ -58,7 +61,7 @@ public class BranchController {
         BranchDTO dto = service.getById(id);
         SuccessResponse<BranchDTO> response = new SuccessResponse<>(
                 HttpServletResponse.SC_OK,
-                "Lấy chi tiết chi nhánh thành công!",
+                ResponseMessage.GET_BRANCH_DETAIL_SUCCESS,
                 dto
         );
         return ResponseEntity.ok(response);
@@ -69,9 +72,9 @@ public class BranchController {
     public ResponseEntity<SuccessNoResponse> delete(@PathVariable Long id) {
         try {
             service.delete(id);
-            return ResponseEntity.ok(new SuccessNoResponse(200, "Delete successfully!"));
+            return ResponseEntity.ok(new SuccessNoResponse(200, ResponseMessage.DELETE_SUCCESS));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new SuccessNoResponse(500, "Delete failed!"));
+            return ResponseEntity.status(500).body(new SuccessNoResponse(500, ResponseMessage.DELETE_FAILED));
         }
     }
 
@@ -79,9 +82,9 @@ public class BranchController {
     public ResponseEntity<SuccessNoResponse> deleteMore(@RequestBody List<Long> ids) {
         try {
             service.deleteMore(ids);
-            return ResponseEntity.ok(new SuccessNoResponse(200, "Delete successfully!"));
+            return ResponseEntity.ok(new SuccessNoResponse(200, ResponseMessage.DELETE_SUCCESS));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new SuccessNoResponse(500, "Delete failed!"));
+            return ResponseEntity.status(500).body(new SuccessNoResponse(500, ResponseMessage.DELETE_FAILED));
         }
     }
 

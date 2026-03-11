@@ -21,9 +21,12 @@ import com.fpt.service.interfaces.IUserService;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fpt.constant.ApiPaths;
+import com.fpt.constant.ResponseMessage;
+
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value = "/api/v1/users")
+@RequestMapping(ApiPaths.USERS)
 @Validated
 public class UserController {
 
@@ -69,7 +72,7 @@ public class UserController {
 
 			Map<String, Object> response = new HashMap<>();
 			response.put("code", HttpServletResponse.SC_OK);
-			response.put("message", "Register successfully, please check email to active account!");
+			response.put("message", ResponseMessage.REGISTER_SUCCESS);
 
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
@@ -88,7 +91,7 @@ public class UserController {
 		// active user
 		userService.activeUser(token);
 
-		return new ResponseEntity<>("Active success!", HttpStatus.OK);
+		return new ResponseEntity<>(ResponseMessage.ACTIVE_SUCCESS, HttpStatus.OK);
 	}
 
 	// resend confirm
@@ -162,7 +165,7 @@ public class UserController {
         		user.getRole(),
         		user.getStatus().toString(),
         		user.getAvatarUrl());
-		return ResponseEntity.ok(new SuccessResponse<>(200, "Get profile successfully!", profileDto));
+		return ResponseEntity.ok(new SuccessResponse<>(200, ResponseMessage.GET_PROFILE_SUCCESS, profileDto));
 
 	}
 	@PreAuthorize("isAuthenticated()")
@@ -173,7 +176,7 @@ public class UserController {
 		// get username from token
 		String username = authentication.getName();
 		userService.changeUserProfile(username, dto);
-		SuccessNoResponse response = new SuccessNoResponse(HttpServletResponse.SC_OK, "Thay đổi thông tin thành công");
+		SuccessNoResponse response = new SuccessNoResponse(HttpServletResponse.SC_OK, ResponseMessage.UPDATE_PROFILE_SUCCESS);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
@@ -187,12 +190,12 @@ public class UserController {
 			userService.changePasswordUser(userId, request);
 			Map<String, Object> response = new HashMap<>();
 			response.put("code", HttpStatus.OK.value());
-			response.put("message", "Change password successfully.");
+			response.put("message", ResponseMessage.CHANGE_PASSWORD_SUCCESS);
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			Map<String, Object> response = new HashMap<>();
 			response.put("code", HttpStatus.BAD_REQUEST.value());
-			response.put("message", "Change password failed: " + e.getMessage());
+			response.put("message", ResponseMessage.CHANGE_PASSWORD_FAILED + e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 

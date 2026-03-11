@@ -1,23 +1,20 @@
 package com.fpt.service.implementations;
 
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
 import com.fpt.dto.OptionDTO;
 import com.fpt.entity.Option;
 import com.fpt.entity.OptionGroup;
-import com.fpt.entity.SubscriptionPackage;
 import com.fpt.form.OptionCreateRequest;
 import com.fpt.repository.OptionGroupRepository;
 import com.fpt.repository.OptionRepository;
 import com.fpt.service.interfaces.IOptionService;
-import com.fpt.specification.OptionSpecificationBuilder;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,8 +38,7 @@ public class OptionService implements IOptionService {
                         .displayOrder(req.getDisplayOrder())
                         .isActive(true)
                         .isDeleted(false)
-                        .build()
-        );
+                        .build());
         return toDto(option);
     }
 
@@ -61,7 +57,6 @@ public class OptionService implements IOptionService {
         return toDto(option);
     }
 
-
     @Override
     public void delete(Long id) {
         if (!optionRepository.existsById(id)) {
@@ -69,6 +64,7 @@ public class OptionService implements IOptionService {
         }
         optionRepository.deleteById(id);
     }
+
     @Override
     public void deleteMany(List<Long> ids) {
         List<Option> options = optionRepository.findAllById(ids);

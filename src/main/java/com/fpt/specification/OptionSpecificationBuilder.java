@@ -1,19 +1,18 @@
 package com.fpt.specification;
 
-import com.fpt.entity.License;
-import com.fpt.entity.Option;
-import com.fpt.entity.SubscriptionPackage;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
+
+import com.fpt.entity.Option;
 
 public class OptionSpecificationBuilder {
 
 	private final String search;
 	private final Boolean isActive;
 
-	public OptionSpecificationBuilder(String search,Boolean isActive) {
+	public OptionSpecificationBuilder(String search, Boolean isActive) {
 		this.search = search;
-		this.isActive=isActive;
+		this.isActive = isActive;
 
 	}
 
@@ -21,7 +20,7 @@ public class OptionSpecificationBuilder {
 		Specification<Option> searchSpec = Specification.where(null); // bắt đầu từ null
 
 		if (StringUtils.hasText(search)) {
-			String[] fields = {"name"};
+			String[] fields = { "name" };
 			for (String field : fields) {
 				SearchCriteria criteria = new SearchCriteria(field, "Like", search);
 				Specification<Option> spec = new OptionSpecification(criteria);

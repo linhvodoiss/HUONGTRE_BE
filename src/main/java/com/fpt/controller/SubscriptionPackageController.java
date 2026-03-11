@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import com.fpt.constant.ApiPaths;
+import com.fpt.constant.ResponseMessage;
+
 @RestController
-@RequestMapping("/api/v1/subscriptions")
+@RequestMapping(ApiPaths.SUBSCRIPTIONS)
 @RequiredArgsConstructor
 @Validated
 public class SubscriptionPackageController {
@@ -42,7 +45,7 @@ public class SubscriptionPackageController {
              @RequestParam(required = false) SubscriptionPackage.BillingCycle cycle
     ) {
         Page<SubscriptionPackageDTO> dtoPage = service.getAllPackage(pageable, search,isActive,minPrice,maxPrice,type,cycle);
-        PaginatedResponse<SubscriptionPackageDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, "Lấy danh sách gói đăng ký thành công");
+        PaginatedResponse<SubscriptionPackageDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, ResponseMessage.GET_LIST_SUBSCRIPTION_SUCCESS);
         return ResponseEntity.ok(response);
     }
 
@@ -57,7 +60,7 @@ public class SubscriptionPackageController {
 
     ) {
         Page<SubscriptionPackageDTO> dtoPage = service.getAllPackageCustomer(pageable, search,minPrice,maxPrice,type,cycle);
-        PaginatedResponse<SubscriptionPackageDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, "Lấy danh sách gói đăng ký thành công");
+        PaginatedResponse<SubscriptionPackageDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, ResponseMessage.GET_LIST_SUBSCRIPTION_SUCCESS);
         return ResponseEntity.ok(response);
     }
 
@@ -66,7 +69,7 @@ public class SubscriptionPackageController {
         List<SubscriptionPackageDTO> topPackages = service.getTop3MostUsedPackages();
         SuccessResponse<List<SubscriptionPackageDTO>> response = new SuccessResponse<>(
                 HttpServletResponse.SC_OK,
-                "Get data successfully",
+                ResponseMessage.GET_SUCCESS,
                 topPackages
         );
         return ResponseEntity.ok(response);
@@ -78,7 +81,7 @@ public class SubscriptionPackageController {
         SubscriptionPackageDTO dto = service.getById(id);
         SuccessResponse<SubscriptionPackageDTO> response = new SuccessResponse<>(
                 HttpServletResponse.SC_OK,
-                "Take detail package successfully!",
+                ResponseMessage.GET_SUBSCRIPTION_DETAIL_SUCCESS,
                 dto
         );
         return ResponseEntity.ok(response);
@@ -88,9 +91,9 @@ public class SubscriptionPackageController {
     public ResponseEntity<SuccessResponse<SubscriptionPackageDTO>> create(@RequestBody SubscriptionPackageDTO dto) {
         try {
             SubscriptionPackageDTO saved = service.create(dto);
-            return ResponseEntity.ok(new SuccessResponse<>(200, "Create successfully!", saved));
+            return ResponseEntity.ok(new SuccessResponse<>(200, ResponseMessage.CREATE_SUCCESS, saved));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new SuccessResponse<>(500, "Create failed!", null));
+            return ResponseEntity.status(500).body(new SuccessResponse<>(500, ResponseMessage.SYSTEM_ERROR, null));
         }
     }
 
@@ -99,9 +102,9 @@ public class SubscriptionPackageController {
     public ResponseEntity<SuccessResponse<SubscriptionPackageDTO>> update(@PathVariable Long id, @RequestBody SubscriptionPackageDTO dto) {
         try {
             SubscriptionPackageDTO updated = service.update(id, dto);
-            return ResponseEntity.ok(new SuccessResponse<>(200, "Update successfully!", updated));
+            return ResponseEntity.ok(new SuccessResponse<>(200, ResponseMessage.UPDATE_SUCCESS, updated));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new SuccessResponse<>(500, "Update failed!", null));
+            return ResponseEntity.status(500).body(new SuccessResponse<>(500, ResponseMessage.SYSTEM_ERROR, null));
         }
     }
 
@@ -110,9 +113,9 @@ public class SubscriptionPackageController {
     public ResponseEntity<SuccessNoResponse> delete(@PathVariable Long id) {
         try {
             service.delete(id);
-            return ResponseEntity.ok(new SuccessNoResponse(200, "Delete successfully!"));
+            return ResponseEntity.ok(new SuccessNoResponse(200, ResponseMessage.DELETE_SUCCESS));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new SuccessNoResponse(500, "Delete failed!"));
+            return ResponseEntity.status(500).body(new SuccessNoResponse(500, ResponseMessage.DELETE_FAILED));
         }
     }
 
@@ -120,9 +123,9 @@ public class SubscriptionPackageController {
     public ResponseEntity<SuccessNoResponse> deleteMore(@RequestBody List<Long> ids) {
         try {
             service.deleteMore(ids);
-            return ResponseEntity.ok(new SuccessNoResponse(200, "Delete successfully!"));
+            return ResponseEntity.ok(new SuccessNoResponse(200, ResponseMessage.DELETE_SUCCESS));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new SuccessNoResponse(500, "Delete failed!"));
+            return ResponseEntity.status(500).body(new SuccessNoResponse(500, ResponseMessage.DELETE_FAILED));
         }
     }
 

@@ -1,13 +1,13 @@
 package com.fpt.specification;
 
-import com.fpt.entity.Product;
-import com.fpt.entity.SubscriptionPackage;
-import org.springframework.data.jpa.domain.Specification;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import com.fpt.entity.Product;
 
 public class ProductSpecification implements Specification<Product> {
 
@@ -22,7 +22,8 @@ public class ProductSpecification implements Specification<Product> {
 	public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
 		if (criteria.getOperator().equalsIgnoreCase("Like")) {
-			return cb.like(cb.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
+			return cb.like(cb.lower(root.get(criteria.getKey())),
+					"%" + criteria.getValue().toString().toLowerCase() + "%");
 		}
 
 		if (criteria.getOperator().equalsIgnoreCase(">=")) {

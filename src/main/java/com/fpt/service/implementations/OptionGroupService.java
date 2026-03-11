@@ -1,23 +1,20 @@
 package com.fpt.service.implementations;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fpt.dto.OptionDTO;
 import com.fpt.dto.OptionGroupDTO;
 import com.fpt.entity.Option;
 import com.fpt.entity.OptionGroup;
 import com.fpt.form.OptionGroupCreateRequest;
 import com.fpt.repository.OptionGroupRepository;
-import com.fpt.repository.OptionRepository;
 import com.fpt.service.interfaces.IOptionGroupService;
-import com.fpt.service.interfaces.IOptionService;
-import com.fpt.specification.OptionSpecificationBuilder;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
-import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -57,8 +54,7 @@ public class OptionGroupService implements IOptionGroupService {
                         .maxSelect(request.getMaxSelect())
                         .displayOrder(request.getDisplayOrder())
                         .isActive(true)
-                        .build()
-        );
+                        .build());
 
         return toDto(group);
 
@@ -81,7 +77,6 @@ public class OptionGroupService implements IOptionGroupService {
         return toDto(group);
     }
 
-
     @Override
     public void delete(Long id) {
         if (!repository.existsById(id)) {
@@ -89,6 +84,7 @@ public class OptionGroupService implements IOptionGroupService {
         }
         repository.deleteById(id);
     }
+
     @Override
     public void deleteMany(List<Long> ids) {
         List<OptionGroup> options = repository.findAllById(ids);
@@ -126,10 +122,9 @@ public class OptionGroupService implements IOptionGroupService {
                         optionGroup.getOptions() == null
                                 ? List.of()
                                 : optionGroup.getOptions()
-                                .stream()
-                                .map(this::toOptionDto)
-                                .collect(Collectors.toList())
-                )
+                                        .stream()
+                                        .map(this::toOptionDto)
+                                        .collect(Collectors.toList()))
                 .build();
     }
 }

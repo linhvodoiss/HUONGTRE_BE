@@ -24,8 +24,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
+import com.fpt.constant.ApiPaths;
+import com.fpt.constant.ResponseMessage;
+
 @RestController
-@RequestMapping("/api/v1/licenses")
+@RequestMapping(ApiPaths.LICENSES)
 @RequiredArgsConstructor
 @Validated
 public class LicenseController {
@@ -44,21 +47,21 @@ public ResponseEntity<PaginatedResponse<LicenseDTO>> getAllOrders(
 
 ) {
     Page<LicenseDTO> dtoPage = service.getAllLicense(pageable, search);
-    PaginatedResponse<LicenseDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, "Lấy danh sách các license thành công");
+    PaginatedResponse<LicenseDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, ResponseMessage.GET_LIST_LICENSE_SUCCESS);
     return ResponseEntity.ok(response);
 }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("user")
     public ResponseEntity<PaginatedResponse<LicenseDTO>> getByUserId(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @CurrentUserId Long userId, @RequestParam(required = false) String search, @RequestParam(required = false) SubscriptionPackage.TypePackage type) {
         Page<LicenseDTO> dtoPage = service.getUserLicense(pageable, search,userId,type);
-        PaginatedResponse<LicenseDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, "Lấy danh sách các license thành công");
+        PaginatedResponse<LicenseDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, ResponseMessage.GET_LIST_LICENSE_SUCCESS);
         return ResponseEntity.ok(response);
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("canUsed")
     public ResponseEntity<SuccessResponse<List<LicenseDTO>>> getCanUsedLicenses(@CurrentUserId Long userId) {
         List<LicenseDTO> licenseDTOs = service.getLicenseIsActiveOfUser(userId);
-        return ResponseEntity.ok(new SuccessResponse<>(200, "Lấy danh sách license đang sử dụng thành công", licenseDTOs));
+        return ResponseEntity.ok(new SuccessResponse<>(200, ResponseMessage.GET_LIST_LICENSE_USED_SUCCESS, licenseDTOs));
     }
 
 
@@ -79,7 +82,7 @@ public ResponseEntity<PaginatedResponse<LicenseDTO>> getAllOrders(
             }
 
             LicenseDTO license = service.createLicense(form, ip);
-            return ResponseEntity.ok(new SuccessResponse<>(200, "Tạo license thành công", license));
+            return ResponseEntity.ok(new SuccessResponse<>(200, ResponseMessage.CREATE_LICENSE_SUCCESS, license));
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(new ErrorNoResponse(400, ex.getMessage()));
         }
@@ -100,7 +103,7 @@ public ResponseEntity<PaginatedResponse<LicenseDTO>> getAllOrders(
             LicenseDTO dto = service.bindHardwareIdToLicense(form);
             return ResponseEntity.ok(Map.of(
                     "code", 200,
-                    "message", "Register device successfully",
+                    "message", ResponseMessage.BIND_HARDWARE_SUCCESS,
                     "data", dto
             ));
         } catch (Exception e) {
@@ -131,9 +134,9 @@ public ResponseEntity<PaginatedResponse<LicenseDTO>> getAllOrders(
 
         try {
             service.unbindHardwareIdFromLicense(licenseKey);
-            return ResponseEntity.ok(new SuccessNoResponse(200, "Unbind hardware successfully!"));
+            return ResponseEntity.ok(new SuccessNoResponse(200, ResponseMessage.UNBIND_HARDWARE_SUCCESS));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new SuccessNoResponse(500, "Unbind hardware failed!"));
+            return ResponseEntity.status(500).body(new SuccessNoResponse(500, ResponseMessage.UNBIND_HARDWARE_FAILED));
         }
 
 

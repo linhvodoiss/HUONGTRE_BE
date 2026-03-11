@@ -1,16 +1,9 @@
 package com.fpt.service.implementations;
 
-import com.fpt.dto.OptionDTO;
-import com.fpt.dto.SubscriptionPackageDTO;
-import com.fpt.entity.Option;
-import com.fpt.entity.PaymentOrder;
-import com.fpt.entity.SubscriptionPackage;
-import com.fpt.repository.OptionRepository;
-import com.fpt.repository.PaymentOrderRepository;
-import com.fpt.repository.SubscriptionPackageRepository;
-import com.fpt.service.interfaces.ISubscriptionPackageService;
-import com.fpt.specification.SubscriptionPackageSpecificationBuilder;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,9 +11,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.fpt.dto.SubscriptionPackageDTO;
+import com.fpt.entity.PaymentOrder;
+import com.fpt.entity.SubscriptionPackage;
+import com.fpt.repository.OptionRepository;
+import com.fpt.repository.PaymentOrderRepository;
+import com.fpt.repository.SubscriptionPackageRepository;
+import com.fpt.service.interfaces.ISubscriptionPackageService;
+import com.fpt.specification.SubscriptionPackageSpecificationBuilder;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -33,28 +33,37 @@ public class SubscriptionPackageService implements ISubscriptionPackageService {
     private final PaymentOrderRepository paymentOrderRepository;
 
     @Autowired
-private ModelMapper modelMapper;
+    private ModelMapper modelMapper;
+
     @Override
-    public Page<SubscriptionPackageDTO> getAllPackage(Pageable pageable, String search, Boolean isActive, Double minPrice,Double maxPrice,SubscriptionPackage.TypePackage type,SubscriptionPackage.BillingCycle cycle) {
-        SubscriptionPackageSpecificationBuilder specification = new SubscriptionPackageSpecificationBuilder(search,isActive,minPrice,maxPrice,type,cycle);
+    public Page<SubscriptionPackageDTO> getAllPackage(Pageable pageable, String search, Boolean isActive,
+            Double minPrice, Double maxPrice, SubscriptionPackage.TypePackage type,
+            SubscriptionPackage.BillingCycle cycle) {
+        SubscriptionPackageSpecificationBuilder specification = new SubscriptionPackageSpecificationBuilder(search,
+                isActive, minPrice, maxPrice, type, cycle);
         return repository.findAll(specification.build(), pageable)
                 .map(this::toDto);
-//                .map(subscription -> modelMapper.map(subscription, SubscriptionPackageDTO.class));
+        // .map(subscription -> modelMapper.map(subscription,
+        // SubscriptionPackageDTO.class));
     }
 
     @Override
-    public Page<SubscriptionPackageDTO> getAllPackageCustomer( Pageable pageable, String search, Double minPrice,Double maxPrice,SubscriptionPackage.TypePackage type,SubscriptionPackage.BillingCycle cycle) {
-        SubscriptionPackageSpecificationBuilder specification = new SubscriptionPackageSpecificationBuilder(search,true,minPrice,maxPrice,type,cycle);
+    public Page<SubscriptionPackageDTO> getAllPackageCustomer(Pageable pageable, String search, Double minPrice,
+            Double maxPrice, SubscriptionPackage.TypePackage type, SubscriptionPackage.BillingCycle cycle) {
+        SubscriptionPackageSpecificationBuilder specification = new SubscriptionPackageSpecificationBuilder(search,
+                true, minPrice, maxPrice, type, cycle);
         return repository.findAll(specification.build(), pageable)
                 .map(this::toDto);
-//                .map(subscription -> modelMapper.map(subscription, SubscriptionPackageDTO.class));
+        // .map(subscription -> modelMapper.map(subscription,
+        // SubscriptionPackageDTO.class));
     }
 
     @Override
     public List<SubscriptionPackageDTO> convertToDto(List<SubscriptionPackage> subscriptionPackages) {
         List<SubscriptionPackageDTO> subscriptionPackageDTOs = new ArrayList<>();
         for (SubscriptionPackage subscriptionPackage : subscriptionPackages) {
-            SubscriptionPackageDTO subscriptionPackageDTO = modelMapper.map(subscriptionPackage, SubscriptionPackageDTO.class);
+            SubscriptionPackageDTO subscriptionPackageDTO = modelMapper.map(subscriptionPackage,
+                    SubscriptionPackageDTO.class);
             subscriptionPackageDTOs.add(subscriptionPackageDTO);
         }
         return subscriptionPackageDTOs;
@@ -74,10 +83,9 @@ private ModelMapper modelMapper;
                 .orElseThrow(() -> new RuntimeException("Subscription not found"));
     }
 
-
-//    public SubscriptionPackageDTO create(SubscriptionPackageDTO dto) {
-//        return toDto(repository.save(toEntity(dto)));
-//    }
+    // public SubscriptionPackageDTO create(SubscriptionPackageDTO dto) {
+    // return toDto(repository.save(toEntity(dto)));
+    // }
 
     @Override
     public SubscriptionPackageDTO update(Long id, SubscriptionPackageDTO dto) {
@@ -92,13 +100,8 @@ private ModelMapper modelMapper;
         entity.setSimulatedCount(dto.getSimulatedCount());
         entity.setDescription(dto.getDescription());
 
-
-
         return toDto(repository.save(entity));
     }
-
-
-
 
     @Override
     public void delete(Long id) {
@@ -107,13 +110,11 @@ private ModelMapper modelMapper;
         repository.delete(subscription);
     }
 
-
     @Override
     public void deleteMore(List<Long> ids) {
         List<SubscriptionPackage> packages = repository.findAllById(ids);
         repository.deleteAll(packages);
     }
-
 
     @Override
     public SubscriptionPackageDTO create(SubscriptionPackageDTO dto) {
@@ -126,12 +127,10 @@ private ModelMapper modelMapper;
         entity.setSimulatedCount(0L);
         entity.setDescription(dto.getDescription());
 
-
-
-
         SubscriptionPackage saved = repository.save(entity);
         return toDto(saved);
     }
+
     @Override
     public List<SubscriptionPackageDTO> getTop3MostUsedPackages() {
         List<SubscriptionPackage> packages = repository.findAll();
@@ -139,11 +138,13 @@ private ModelMapper modelMapper;
         List<SubscriptionPackageDTO> topList = packages.stream()
                 .map(packageEntity -> {
                     Long realCount = paymentOrderRepository
-                            .countBySubscriptionPackageIdAndPaymentStatus(packageEntity.getId(), PaymentOrder.PaymentStatus.SUCCESS);
+                            .countBySubscriptionPackageIdAndPaymentStatus(packageEntity.getId(),
+                                    PaymentOrder.PaymentStatus.SUCCESS);
                     if (realCount == null) {
                         realCount = 0L;
                     }
-                    Long simulatedCount = packageEntity.getSimulatedCount() != null ? packageEntity.getSimulatedCount() : 0L;
+                    Long simulatedCount = packageEntity.getSimulatedCount() != null ? packageEntity.getSimulatedCount()
+                            : 0L;
                     Long totalCount = realCount + simulatedCount;
 
                     SubscriptionPackageDTO dto = toDto(packageEntity);
@@ -162,7 +163,6 @@ private ModelMapper modelMapper;
 
             topList.add(1, mostPopular);
 
-
             topList.get(0).setPopular(false);
             topList.get(2).setPopular(false);
         } else {
@@ -174,7 +174,6 @@ private ModelMapper modelMapper;
 
         return topList;
     }
-
 
     private SubscriptionPackageDTO toDto(SubscriptionPackage entity) {
 

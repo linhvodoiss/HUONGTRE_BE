@@ -1,28 +1,38 @@
 package com.fpt.controller;
 
-import com.fpt.dto.ProductDTO;
-import com.fpt.dto.SubscriptionPackageDTO;
-import com.fpt.entity.SubscriptionPackage;
-import com.fpt.form.ProductCreateRequest;
-import com.fpt.payload.PaginatedResponse;
-import com.fpt.payload.SuccessNoResponse;
-import com.fpt.payload.SuccessResponse;
-import com.fpt.service.interfaces.IProductService;
-import com.fpt.service.interfaces.ISubscriptionPackageService;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import com.fpt.dto.ProductDTO;
+import com.fpt.form.ProductCreateRequest;
+import com.fpt.payload.PaginatedResponse;
+import com.fpt.payload.SuccessNoResponse;
+import com.fpt.payload.SuccessResponse;
+import com.fpt.service.interfaces.IProductService;
+
+import lombok.RequiredArgsConstructor;
+
+import com.fpt.constant.ApiPaths;
+import com.fpt.constant.ResponseMessage;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping(ApiPaths.PRODUCTS)
 @RequiredArgsConstructor
 @Validated
 public class ProductController {
@@ -36,60 +46,56 @@ public class ProductController {
 
     @GetMapping("/list")
     public ResponseEntity<PaginatedResponse<ProductDTO>> getAllProducts(
-             Pageable pageable,
+            Pageable pageable,
             @RequestParam(required = false) String search,
-             @RequestParam(required = false) Boolean isActive
+            @RequestParam(required = false) Boolean isActive
 
     ) {
-        Page<ProductDTO> dtoPage = service.getAllProduct(pageable, search,isActive);
-        PaginatedResponse<ProductDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, "Lấy danh sách sản phẩm thành công");
+        Page<ProductDTO> dtoPage = service.getAllProduct(pageable, search, isActive);
+        PaginatedResponse<ProductDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK,
+                "Lấy danh sách sản phẩm thành công");
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/customer/list")
     public ResponseEntity<PaginatedResponse<ProductDTO>> getAllProductsCustomer(
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam(required = false) String search
-    ) {
+            @RequestParam(required = false) String search) {
         Page<ProductDTO> dtoPage = service.getAllProductCustomer(pageable, search);
-        PaginatedResponse<ProductDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK, "Lấy danh sách sản phẩm thành công");
+        PaginatedResponse<ProductDTO> response = new PaginatedResponse<>(dtoPage, HttpServletResponse.SC_OK,
+                "Lấy danh sách sản phẩm thành công");
         return ResponseEntity.ok(response);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<SuccessResponse<ProductDTO>> getById(@PathVariable Long id) {
         ProductDTO dto = service.getById(id);
         SuccessResponse<ProductDTO> response = new SuccessResponse<>(
                 HttpServletResponse.SC_OK,
-                "Lấy chi tiết sản phẩm thành công!",
-                dto
-        );
+                ResponseMessage.GET_PRODUCT_DETAIL_SUCCESS,
+                dto);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<SuccessResponse<ProductDTO>> createProduct(
-            @RequestBody ProductCreateRequest request
-    ) {
+            @RequestBody ProductCreateRequest request) {
         ProductDTO dto = service.create(request);
         SuccessResponse<ProductDTO> response = new SuccessResponse<>(
                 HttpServletResponse.SC_OK,
-                "Thêm mới sản phầm thành công!",
-                dto
-        );
+                ResponseMessage.CREATE_PRODUCT_SUCCESS,
+                dto);
 
         return ResponseEntity.ok(response);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessNoResponse> delete(@PathVariable Long id) {
         try {
             service.delete(id);
-            return ResponseEntity.ok(new SuccessNoResponse(200, "Delete successfully!"));
+            return ResponseEntity.ok(new SuccessNoResponse(200, ResponseMessage.DELETE_SUCCESS));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new SuccessNoResponse(500, "Delete failed!"));
+            return ResponseEntity.status(500).body(new SuccessNoResponse(500, ResponseMessage.DELETE_FAILED));
         }
     }
 
@@ -97,11 +103,10 @@ public class ProductController {
     public ResponseEntity<SuccessNoResponse> deleteMore(@RequestBody List<Long> ids) {
         try {
             service.deleteMore(ids);
-            return ResponseEntity.ok(new SuccessNoResponse(200, "Delete successfully!"));
+            return ResponseEntity.ok(new SuccessNoResponse(200, ResponseMessage.DELETE_SUCCESS));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new SuccessNoResponse(500, "Delete failed!"));
+            return ResponseEntity.status(500).body(new SuccessNoResponse(500, ResponseMessage.DELETE_FAILED));
         }
     }
-
 
 }
