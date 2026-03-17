@@ -35,7 +35,12 @@ export class User extends AbstractEntity {
   })
   status: UserStatus;
 
-  @Column({ name: 'isActive', default: true })
+  @Column({ 
+    name: 'isActive', 
+    type: 'tinyint', 
+    width: 1, 
+    default: 1 
+  })
   isActive: boolean;
 
   @Column({ name: 'avatarUrl', nullable: true })

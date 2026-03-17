@@ -25,8 +25,8 @@ import { BranchesModule } from './modules/branches/branches.module';
         database: configService.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         autoLoadEntities: true,
-        synchronize: false, // Để chạy được với DB cũ, hãy dùng false. Khi thêm bảng mới hãy bật lại true.
-        logging: true,
+        synchronize: false, // Tạm tắt để tránh lỗi Table exists trong lúc setup seeder
+        logging: false,
       }),
       inject: [ConfigService],
     }),

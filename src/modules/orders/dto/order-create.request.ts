@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty, IsNumber, IsOptional, IsArray, ValidateNested, Min } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  ValidateNested,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class OrderItemOptionRequest {
@@ -47,3 +55,5 @@ export class OrderCreateRequest {
   @Type(() => OrderItemRequest)
   items: OrderItemRequest[];
 }
+
+

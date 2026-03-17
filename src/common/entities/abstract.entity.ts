@@ -3,27 +3,44 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
   Column,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 
 export abstract class AbstractEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
   updatedAt: Date;
 
   @Column({
     name: 'is_deleted',
-    type: 'bit',
-    width: 1,
-    default: () => "'\\0'",
-    transformer: {
-      from: (v: Buffer) => v !== null && v.length > 0 && v[0] === 1,
-      to: (v: boolean) => (v ? 1 : 0),
-    },
+    default: false,
   })
   isDeleted: boolean;
+
+  @BeforeInsert()
+  updateTimestampsOnInsert() {
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+  }
+
+  @BeforeUpdate()
+  updateTimestampsOnUpdate() {
+    this.updatedAt = new Date();
+  }
 }
+

@@ -18,6 +18,11 @@ export class Branch extends AbstractEntity {
   @Column({ nullable: true })
   phone: string;
 
-  @Column({ name: 'isActive', default: true })
+  @Column({ 
+    name: 'isActive', 
+    type: 'tinyint', 
+    width: 1, 
+    default: 1 
+  })
   isActive: boolean;
 }

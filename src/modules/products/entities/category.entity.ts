@@ -15,13 +15,7 @@ export class Category extends AbstractEntity {
 
   @Column({
     name: 'isActive',
-    type: 'bit',
-    width: 1,
-    default: () => "'\\1'",
-    transformer: {
-      from: (v: Buffer) => v !== null && v.length > 0 && v[0] === 1,
-      to: (v: boolean) => (v ? 1 : 0),
-    },
+    default: true,
   })
   isActive: boolean;
 
