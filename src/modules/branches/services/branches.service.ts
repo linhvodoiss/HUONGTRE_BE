@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Branch } from '../entities/branch.entity';
 import { CreateBranchDto, UpdateBranchDto } from '../dto/branch.dto';
 
@@ -11,19 +11,25 @@ export class BranchesService {
     private branchRepository: Repository<Branch>,
   ) {}
 
-  async findAll(search?: string, isActive?: boolean) {
-    const where: any = { isDeleted: false };
-    if (search) {
-      where.name = Like(`%${search}%`);
-    }
-    if (isActive !== undefined) {
-      where.isActive = isActive;
-    }
-
-    return this.branchRepository.find({
-      where,
+  async findAll(page: number = 1, limit: number = 10) {
+    const [data, total] = await this.branchRepository.findAndCount({
+      where: { isDeleted: false },
       order: { id: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
+    const lastPage = Math.ceil(total / limit);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage,
+      },
+    };
   }
 
   async findOne(id: number) {

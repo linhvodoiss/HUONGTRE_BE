@@ -3,13 +3,23 @@ import { AbstractEntity } from '../../../common/entities/abstract.entity';
 import { Customer } from '../../customers/entities/customer.entity';
 import { OrderItem } from './order-item.entity';
 
+export enum OrderStatus {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
 @Entity({ name: 'order' })
 export class Order extends AbstractEntity {
   @Column({ name: 'totalAmount' })
   totalAmount: number;
 
-  @Column()
-  status: string; // Chờ xác nhận, Hoàn thành, Hủy...
+  @Column({
+    type: 'enum',
+    enum: OrderStatus,
+    default: OrderStatus.PENDING,
+  })
+  status: OrderStatus;
 
   @Column({ name: 'receiverName', nullable: true })
   receiverName: string;

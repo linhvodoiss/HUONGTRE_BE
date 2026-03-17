@@ -43,4 +43,3 @@ export abstract class AbstractEntity {
     this.updatedAt = new Date();
   }
 }
-

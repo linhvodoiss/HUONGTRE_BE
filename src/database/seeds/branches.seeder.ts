@@ -22,7 +22,7 @@ export class BranchesSeeder implements Seeder {
         name: 'Hương Tre - Bình Thạnh',
         address: '45 Phan Xích Long, Bình Thạnh',
         phone: '0283800222',
-      }
+      },
     ];
 
     return this.branchRepository.save(branches);

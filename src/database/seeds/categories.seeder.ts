@@ -15,7 +15,7 @@ export class CategoriesSeeder implements Seeder {
     const categories = [
       { name: 'Trà Sữa', description: 'Trà sữa đậm vị Hương Tre' },
       { name: 'Trà Trái Cây', description: 'Trà kết hợp trái cây tươi 100%' },
-      { name: 'Topping', description: 'Các loại thạch' }
+      { name: 'Topping', description: 'Các loại thạch' },
     ];
 
     return this.categoryRepository.save(categories);

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Customer } from '../entities/customer.entity';
 
 @Injectable()
@@ -10,16 +10,25 @@ export class CustomersService {
     private customerRepository: Repository<Customer>,
   ) {}
 
-  async findAll(search?: string) {
-    const where: any = { isDeleted: false };
-    if (search) {
-      where.phone = Like(`%${search}%`);
-    }
-
-    return this.customerRepository.find({
-      where,
+  async findAll(page: number = 1, limit: number = 10) {
+    const [data, total] = await this.customerRepository.findAndCount({
+      where: { isDeleted: false },
       order: { id: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
+    const lastPage = Math.ceil(total / limit);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage,
+      },
+    };
   }
 
   async findOne(id: number) {
@@ -36,16 +45,5 @@ export class CustomersService {
     return this.customerRepository.findOne({
       where: { phone, isDeleted: false },
     });
-  }
-
-  async create(data: any) {
-    const customer = this.customerRepository.create(data);
-    return this.customerRepository.save(customer);
-  }
-
-  async update(id: number, data: any) {
-    const customer = await this.findOne(id);
-    Object.assign(customer, data);
-    return this.customerRepository.save(customer);
   }
 }

@@ -11,17 +11,37 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async findAll() {
-    return this.usersRepository.find({
+  async findAll(page: number = 1, limit: number = 10) {
+    const [data, total] = await this.usersRepository.findAndCount({
       where: { isDeleted: false },
       order: { id: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOneByUsername(username: string): Promise<User | null> {
     return this.usersRepository.findOne({
       where: { username },
-      select: ['id', 'username', 'password', 'email', 'role', 'firstName', 'lastName'],
+      select: [
+        'id',
+        'username',
+        'password',
+        'email',
+        'role',
+        'firstName',
+        'lastName',
+      ],
     });
   }
 
@@ -44,11 +64,11 @@ export class UsersService {
   async update(id: number, data: any) {
     const user = await this.findOneById(id);
     if (!user) throw new NotFoundException('User not found');
-    
+
     if (data.password) {
       data.password = await bcrypt.hash(data.password, 10);
     }
-    
+
     Object.assign(user, data);
     return this.usersRepository.save(user);
   }

@@ -42,17 +42,37 @@ export class OptionsSeeder implements Seeder {
       },
     ]);
 
-    const sugarGroup = groups.find(g => g.name === 'Chọn mức đường');
-    const toppingGroup = groups.find(g => g.name === 'Chọn Topping');
+    const sugarGroup = groups.find((g) => g.name === 'Chọn mức đường');
+    const toppingGroup = groups.find((g) => g.name === 'Chọn Topping');
 
     // 2. Tạo các Tùy chọn (Options) cho từng nhóm
     await this.optionRepository.save([
-      { name: '100% Đường', price: 0, optionGroup: sugarGroup, displayOrder: 1 },
+      {
+        name: '100% Đường',
+        price: 0,
+        optionGroup: sugarGroup,
+        displayOrder: 1,
+      },
       { name: '70% Đường', price: 0, optionGroup: sugarGroup, displayOrder: 2 },
       { name: '50% Đường', price: 0, optionGroup: sugarGroup, displayOrder: 3 },
-      { name: 'Trân châu đen', price: 5000, optionGroup: toppingGroup, displayOrder: 1 },
-      { name: 'Thạch sương sáo', price: 5000, optionGroup: toppingGroup, displayOrder: 2 },
-      { name: 'Kem Cheese', price: 10000, optionGroup: toppingGroup, displayOrder: 3 },
+      {
+        name: 'Trân châu đen',
+        price: 5000,
+        optionGroup: toppingGroup,
+        displayOrder: 1,
+      },
+      {
+        name: 'Thạch sương sáo',
+        price: 5000,
+        optionGroup: toppingGroup,
+        displayOrder: 2,
+      },
+      {
+        name: 'Kem Cheese',
+        price: 10000,
+        optionGroup: toppingGroup,
+        displayOrder: 3,
+      },
     ] as any[]);
 
     // 3. Liên kết Nhóm vào Sản phẩm
@@ -66,7 +86,7 @@ export class OptionsSeeder implements Seeder {
       }
     }
 
-    return this.productOptionGroupRepository.save(links as any[]);
+    return this.productOptionGroupRepository.save(links);
   }
 
   async drop(): Promise<any> {

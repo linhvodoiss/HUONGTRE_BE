@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
   ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
@@ -17,8 +18,10 @@ export class UsersController {
 
   @Get()
   @ResponseMessage('Lấy danh sách người dùng thành công')
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
+    const pageNum = page ? parseInt(page) : 1;
+    const limitNum = limit ? parseInt(limit) : 10;
+    return this.usersService.findAll(pageNum, limitNum);
   }
 
   @Get(':id')

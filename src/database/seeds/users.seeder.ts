@@ -15,7 +15,7 @@ export class UsersSeeder implements Seeder {
 
   async seed(): Promise<any> {
     const hashedPassword = await bcrypt.hash('admin123', 10);
-    
+
     const users = [
       {
         username: 'admin',
@@ -36,7 +36,7 @@ export class UsersSeeder implements Seeder {
         phoneNumber: '0900000002',
         role: Role.STAFF,
         status: UserStatus.ACTIVE,
-      }
+      },
     ];
 
     return this.userRepository.save(users);

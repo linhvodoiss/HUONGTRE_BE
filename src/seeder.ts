@@ -46,4 +46,10 @@ seeder({
       Customer,
     ]),
   ],
-}).run([UsersSeeder, BranchesSeeder, CategoriesSeeder, ProductsSeeder, OptionsSeeder]);
+}).run([
+  UsersSeeder,
+  BranchesSeeder,
+  CategoriesSeeder,
+  ProductsSeeder,
+  OptionsSeeder,
+]);

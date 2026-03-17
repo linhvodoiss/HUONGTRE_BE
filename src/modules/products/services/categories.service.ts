@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Category } from '../entities/category.entity';
 import { Product } from '../entities/product.entity';
 
@@ -11,11 +11,25 @@ export class CategoriesService {
     private categoryRepository: Repository<Category>,
   ) {}
 
-  async findAll() {
-    return this.categoryRepository.find({
+  async findAll(page: number = 1, limit: number = 10) {
+    const [data, total] = await this.categoryRepository.findAndCount({
       where: { isDeleted: false },
       order: { id: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
+    const lastPage = Math.ceil(total / limit);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage,
+      },
+    };
   }
 
   async findOne(id: number) {
@@ -80,12 +94,12 @@ export class CategoriesService {
     }));
   }
 
-  async create(data: any) {
+  async create(data: DeepPartial<Category>) {
     const category = this.categoryRepository.create(data);
     return this.categoryRepository.save(category);
   }
 
-  async update(id: number, data: any) {
+  async update(id: number, data: DeepPartial<Category>) {
     const category = await this.findOne(id);
     Object.assign(category, data);
     return this.categoryRepository.save(category);

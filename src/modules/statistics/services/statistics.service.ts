@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
-import { Order } from '../../orders/entities/order.entity';
+import { Order, OrderStatus } from '../../orders/entities/order.entity';
 @Injectable()
 export class StatisticsService {
   constructor(
@@ -12,12 +12,15 @@ export class StatisticsService {
   async getRevenue(startDate: Date, endDate: Date) {
     const orders = await this.orderRepository.find({
       where: {
-        status: 'Hoàn thành',
+        status: OrderStatus.COMPLETED,
         createdAt: Between(startDate, endDate),
       },
     });
 
-    const totalRevenue = orders.reduce((sum, order) => sum + Number(order.totalAmount || 0), 0);
+    const totalRevenue = orders.reduce(
+      (sum, order) => sum + Number(order.totalAmount || 0),
+      0,
+    );
     const orderCount = orders.length;
 
     return {

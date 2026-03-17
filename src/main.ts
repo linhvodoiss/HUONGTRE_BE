@@ -19,7 +19,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
-  
+
   // Kích hoạt chuẩn chung Response
   app.useGlobalInterceptors(new TransformInterceptor(app.get(Reflector)));
 
@@ -37,7 +37,7 @@ async function bootstrap() {
 
   // Kích hoạt CORS
   app.enableCors({
-    origin: configService.get<string>('FRONTEND_URL'),
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
     credentials: true,
   });
 

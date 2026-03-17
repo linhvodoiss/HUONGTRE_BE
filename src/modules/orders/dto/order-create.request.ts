@@ -55,5 +55,3 @@ export class OrderCreateRequest {
   @Type(() => OrderItemRequest)
   items: OrderItemRequest[];
 }
-
-

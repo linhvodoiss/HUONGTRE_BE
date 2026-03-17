@@ -16,7 +16,9 @@ export class ProductsSeeder implements Seeder {
 
   async seed(): Promise<any> {
     const teaCat = await this.categoryRepository.findOneBy({ name: 'Trà Sữa' });
-    const fruitCat = await this.categoryRepository.findOneBy({ name: 'Trà Trái Cây' });
+    const fruitCat = await this.categoryRepository.findOneBy({
+      name: 'Trà Trái Cây',
+    });
 
     const products = [
       {
@@ -32,7 +34,7 @@ export class ProductsSeeder implements Seeder {
         description: 'Thanh mát vị đào',
         category: fruitCat,
         imageUrl: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc',
-      }
+      },
     ];
 
     return this.productRepository.save(products as any[]);

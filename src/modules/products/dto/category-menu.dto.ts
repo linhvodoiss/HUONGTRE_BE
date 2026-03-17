@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, IsBoolean, IsArray } from 'class-validator';
+// Unused validator imports removed
 
 export class OptionMenuDto {
   id: number;

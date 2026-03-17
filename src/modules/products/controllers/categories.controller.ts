@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
   ParseIntPipe,
 } from '@nestjs/common';
 import { CategoriesService } from '../services/categories.service';
@@ -17,8 +18,10 @@ export class CategoriesController {
 
   @Get()
   @ResponseMessage('Lấy danh sách danh mục thành công')
-  findAll() {
-    return this.categoriesService.findAll();
+  findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
+    const pageNum = page ? parseInt(page) : 1;
+    const limitNum = limit ? parseInt(limit) : 10;
+    return this.categoriesService.findAll(pageNum, limitNum);
   }
 
   @Get('menu')

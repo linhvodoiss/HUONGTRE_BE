@@ -18,13 +18,10 @@ export class ProductsController {
 
   @Get()
   @ResponseMessage('Lấy danh sách sản phẩm thành công')
-  findAll(
-    @Query('search') search?: string,
-    @Query('isActive') isActive?: string,
-    @Query('categoryId') categoryId?: number,
-  ) {
-    const active = isActive === 'true' ? true : isActive === 'false' ? false : undefined;
-    return this.productsService.findAll(search, active, categoryId);
+  findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
+    const pageNum = page ? parseInt(page) : 1;
+    const limitNum = limit ? parseInt(limit) : 10;
+    return this.productsService.findAll(pageNum, limitNum);
   }
 
   @Get(':id')

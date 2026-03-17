@@ -17,4 +17,3 @@ import { ProductsModule } from '../products/products.module';
   providers: [OrderService],
 })
 export class OrdersModule {}
-

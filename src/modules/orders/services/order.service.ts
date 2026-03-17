@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, Like } from 'typeorm';
-import { Order } from '../entities/order.entity';
+import { Order, OrderStatus } from '../entities/order.entity';
 import { OrderItem } from '../entities/order-item.entity';
 import { OrderItemOption } from '../entities/order-item-option.entity';
 import { OrderCreateRequest } from '../dto/order-create.request';
@@ -45,7 +45,7 @@ export class OrderService {
 
       // 2. Khởi tạo Order (Lưu trước một lần để lấy ID giống mã Java)
       let order = queryRunner.manager.create(Order, {
-        status: 'NEW',
+        status: OrderStatus.PENDING,
         customer: customer,
         receiverName: request.receiverName,
         receiverPhone: request.receiverPhone,
@@ -65,7 +65,8 @@ export class OrderService {
         const product = await queryRunner.manager.findOneBy(Product, {
           id: itemReq.productId,
         });
-        if (!product) throw new NotFoundException(`Product ${itemReq.productId} not found`);
+        if (!product)
+          throw new NotFoundException(`Product ${itemReq.productId} not found`);
 
         let orderItem = queryRunner.manager.create(OrderItem, {
           order: order,
@@ -84,8 +85,11 @@ export class OrderService {
         // Xử lý Options
         if (itemReq.optionIds && itemReq.optionIds.length > 0) {
           for (const optionId of itemReq.optionIds) {
-            const option = await queryRunner.manager.findOneBy(Option, { id: optionId });
-            if (!option) throw new NotFoundException(`Option ${optionId} not found`);
+            const option = await queryRunner.manager.findOneBy(Option, {
+              id: optionId,
+            });
+            if (!option)
+              throw new NotFoundException(`Option ${optionId} not found`);
 
             const oio = queryRunner.manager.create(OrderItemOption, {
               orderItem: orderItem,
@@ -105,7 +109,6 @@ export class OrderService {
         orderItems.push(orderItem);
       }
 
-
       // Cập nhật lại thông tin Order
       order.totalAmount = totalAmount;
       order.items = orderItems;
@@ -120,8 +123,6 @@ export class OrderService {
       await queryRunner.commitTransaction();
 
       return this.toResponseDto(savedOrder);
-
-
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;
@@ -134,7 +135,10 @@ export class OrderService {
   async findAll(page: number = 1, limit: number = 10, search: string = '') {
     const [orders, total] = await this.orderRepository.findAndCount({
       where: search
-        ? [{ receiverName: Like(`%${search}%`) }, { receiverPhone: Like(`%${search}%`) }]
+        ? [
+            { receiverName: Like(`%${search}%`) },
+            { receiverPhone: Like(`%${search}%`) },
+          ]
         : {},
       relations: ['customer', 'items', 'items.product', 'items.options'],
       order: { createdAt: 'DESC' },
@@ -161,6 +165,15 @@ export class OrderService {
     });
     if (!order) throw new NotFoundException('Order not found');
     return this.toResponseDto(order);
+  }
+
+  async updateStatus(id: number, status: OrderStatus): Promise<any> {
+    const order = await this.orderRepository.findOne({ where: { id } });
+    if (!order) throw new NotFoundException('Order not found');
+
+    order.status = status;
+    const updatedOrder = await this.orderRepository.save(order);
+    return this.getById(updatedOrder.id);
   }
 
   // Hàm Mapper tương đương mapToResponse trong Java
@@ -195,4 +208,3 @@ export class OrderService {
     };
   }
 }
-

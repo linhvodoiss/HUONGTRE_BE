@@ -19,12 +19,10 @@ export class BranchesController {
 
   @Get()
   @ResponseMessage('Lấy danh sách chi nhánh thành công')
-  findAll(
-    @Query('search') search?: string,
-    @Query('isActive') isActive?: string,
-  ) {
-    const active = isActive === 'true' ? true : isActive === 'false' ? false : undefined;
-    return this.branchesService.findAll(search, active);
+  findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
+    const pageNum = page ? parseInt(page) : 1;
+    const limitNum = limit ? parseInt(limit) : 10;
+    return this.branchesService.findAll(pageNum, limitNum);
   }
 
   @Get(':id')
